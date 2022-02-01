@@ -8,54 +8,84 @@ volumes:
   coordinator_var: {}
   router_var: {}
   druid_shared: {}
+  nginx-data: {}
+  nginx-ssl: {}
 
 services:
+# Security
+  nginx:
+    image: jc21/nginx-proxy-manager:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+#    environment:
+#      - DB_MYSQL_HOST=npm-db
+#      - DB_MYSQL_PORT=3306
+#      - DB_MYSQL_USER=npm
+#      - DB_MYSQL_PASSWORD=geheim
+#      - DB_MYSQL_NAME=npm
+    volumes:
+      - nginx-data:/data
+      - nginx-ssl:/etc/letsencrypt
+
 # Trino
   trinocoordinator:
     image: "lewuathe/trino-coordinator:354"
     depends_on:
       - broker
     ports:
-      - "8180:8080"
+      - "8080"
     container_name: "trino_coordinator"
     command: http://trinocoordinator:8080 coordinator
     volumes:
       - ./trino/etc:/usr/local/trino/etc            
-#    restart: on-failure
+#    networks:
+#      - data_request
+
   worker0:
     image: "lewuathe/trino-worker:354"
     depends_on:
       - trinocoordinator
     container_name: "trino_worker0"
     ports:
-      - "8181:8081"
+      - "8081"
     command: http://trinocoordinator:8080 worker0
-#    restart: on-failure
+#    networks:
+#      - data_request
+
   worker1:
     image: "lewuathe/trino-worker:354"
     depends_on:
       - trinocoordinator
     container_name: "trino_worker1"
     ports:
-      - "8182:8081"
+      - "8081"
     command: http://trinocoordinator:8080 worker1
-#    restart: on-failure
+#    networks:
+#      - data_request
+
 # Metabase
   metabase:
     image: "metabase/metabase:latest"
     ports:
-      - "8443:8443"
+      - "3000"
     container_name: "metabase"
     volumes:
       - ./cert.jks:/cert.jks
-#      - ./trino_cert.jks:/trino_cert.jks
       - ./metabase:/tmp
     environment:
       - MB_DB_FILE=/tmp/metabase.db
-      - MB_JETTY_SSL=true
-      - MB_JETTY_SSL_PORT=8443
-      - MB_JETTY_SSL_KEYSTORE=/cert.jks
-      - MB_JETTY_SSL_KEYSTORE_PASSWORD=geheim
+#      - MB_JETTY_SSL=true
+#      - MB_JETTY_SSL_PORT=9999
+#      - MB_JETTY_SSL_KEYSTORE=/cert.jks
+#      - MB_JETTY_SSL_KEYSTORE_PASSWORD=geheim
+    depends_on:
+      - trinocoordinator
+#    networks:
+#      - data_request
+
 # Druid
   postgres:
     container_name: postgres
@@ -66,16 +96,20 @@ services:
       - POSTGRES_PASSWORD=FoolishPassword
       - POSTGRES_USER=druid
       - POSTGRES_DB=druid
+#    networks:
+#      - druidcom
 
   # Need 3.5 or later for container nodes
   zookeeper:
     container_name: zookeeper
     image: bitnami/zookeeper:latest
     ports:
-      - "2181:2181"
+      - "2181"
     environment:
       - ZOO_MY_ID=1
       - ALLOW_ANONYMOUS_LOGIN=yes
+#    networks:
+#      - druidcom
 
   coordinator:
     image: apache/druid:0.22.1
@@ -87,11 +121,13 @@ services:
       - zookeeper
       - postgres
     ports:
-      - "8081:8081"
+      - "8081"
     command:
       - coordinator
     env_file:
       - environment
+#    networks:
+#      - druidcom
 
   broker:
     image: apache/druid:0.22.1
@@ -103,11 +139,14 @@ services:
       - postgres
       - coordinator
     ports:
-      - "8082:8082"
+      - "8082"
     command:
       - broker
     env_file:
       - environment
+#    networks:
+#      - druidcom
+#      - data_request
 
   historical:
     image: apache/druid:0.22.1
@@ -120,11 +159,13 @@ services:
       - postgres
       - coordinator
     ports:
-      - "8083:8083"
+      - "8083"
     command:
       - historical
     env_file:
       - environment
+#    networks:
+#      - druidcom
 
   middlemanager:
     image: apache/druid:0.22.1
@@ -137,44 +178,45 @@ services:
       - postgres
       - coordinator
     ports:
-      - "8091:8091"
-      - "8100-8105:8100-8105"
+      - "8091"
+      - "8100-8105"
     command:
       - middleManager
     env_file:
       - environment
+#    networks:
+#      - druidcom
 
   router:
     image: apache/druid:0.22.1
     container_name: router
     volumes:
       - router_var:/opt/druid/var
-      - ./data:/opt/shared/data
     depends_on:
       - zookeeper
       - postgres
       - coordinator
     ports:
-      - "8888:8888"
+      - "8888"
     command:
       - router
     env_file:
       - environment
 
-#Kafka
+# Kafka
   kafka:
     image: 'bitnami/kafka:latest'
     container_name: kafka
     ports:
-      - '9093:9093'
+      - '9092:9092'
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
 
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
-      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+#      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+#      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+#      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+#      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
       - zookeeper
