@@ -9,7 +9,6 @@ volumes:
   router_var: {}
   druid_shared: {}
   nginx-data: {}
-#  nginx-ssl: {}
 
 services:
 # Security
@@ -20,16 +19,8 @@ services:
       - "80:80"
       - "81:81"
       - "443:443"
-      - "9999:9999"
-#    environment:
-#      - DB_MYSQL_HOST=npm-db
-#      - DB_MYSQL_PORT=3306
-#      - DB_MYSQL_USER=npm
-#      - DB_MYSQL_PASSWORD=geheim
-#      - DB_MYSQL_NAME=npm
     volumes:
       - nginx-data:/data
-#      - nginx-ssl:/etc/letsencrypt
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./certs/:/etc/letsencrypt
 # Trino
@@ -43,8 +34,6 @@ services:
     command: http://trinocoordinator:8080 coordinator
     volumes:
       - ./trino/etc:/usr/local/trino/etc            
-#    networks:
-#      - data_request
 
   worker0:
     image: "lewuathe/trino-worker:354"
@@ -54,8 +43,6 @@ services:
     ports:
       - "8081"
     command: http://trinocoordinator:8080 worker0
-#    networks:
-#      - data_request
 
   worker1:
     image: "lewuathe/trino-worker:354"
@@ -65,8 +52,6 @@ services:
     ports:
       - "8081"
     command: http://trinocoordinator:8080 worker1
-#    networks:
-#      - data_request
 
 # Metabase
   metabase:
@@ -75,18 +60,11 @@ services:
       - "3000"
     container_name: "metabase"
     volumes:
-      - ./cert.jks:/cert.jks
       - ./metabase:/tmp
     environment:
       - MB_DB_FILE=/tmp/metabase.db
-#      - MB_JETTY_SSL=true
-#      - MB_JETTY_SSL_PORT=9999
-#      - MB_JETTY_SSL_KEYSTORE=/cert.jks
-#      - MB_JETTY_SSL_KEYSTORE_PASSWORD=geheim
     depends_on:
       - trinocoordinator
-#    networks:
-#      - data_request
 
 # Druid
   postgres:
@@ -98,10 +76,7 @@ services:
       - POSTGRES_PASSWORD=FoolishPassword
       - POSTGRES_USER=druid
       - POSTGRES_DB=druid
-#    networks:
-#      - druidcom
 
-  # Need 3.5 or later for container nodes
   zookeeper:
     container_name: zookeeper
     image: bitnami/zookeeper:latest
@@ -110,8 +85,6 @@ services:
     environment:
       - ZOO_MY_ID=1
       - ALLOW_ANONYMOUS_LOGIN=yes
-#    networks:
-#      - druidcom
 
   coordinator:
     image: apache/druid:0.22.1
@@ -128,8 +101,6 @@ services:
       - coordinator
     env_file:
       - environment
-#    networks:
-#      - druidcom
 
   broker:
     image: apache/druid:0.22.1
@@ -146,9 +117,6 @@ services:
       - broker
     env_file:
       - environment
-#    networks:
-#      - druidcom
-#      - data_request
 
   historical:
     image: apache/druid:0.22.1
@@ -166,8 +134,6 @@ services:
       - historical
     env_file:
       - environment
-#    networks:
-#      - druidcom
 
   middlemanager:
     image: apache/druid:0.22.1
@@ -186,8 +152,6 @@ services:
       - middleManager
     env_file:
       - environment
-#    networks:
-#      - druidcom
 
   router:
     image: apache/druid:0.22.1
