@@ -36,7 +36,7 @@ services:
     container_name: "trino_coordinator"
     command: http://trinocoordinator:8080 coordinator
     volumes:
-      - ./trino/etc:/usr/local/trino/etc            
+      - ./trino:/usr/local/trino/etc            
 
   worker0:
     image: "lewuathe/trino-worker:354"
