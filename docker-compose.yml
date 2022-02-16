@@ -14,11 +14,14 @@ services:
 # Security
   nginx:
     image: nginx:latest
-    restart: always
+    container_name: "nginx"
     ports:
       - "80:80"
-      - "81:81"
       - "443:443"
+    depends_on:
+      - broker
+      - metabase
+      - trinocoordinator
     volumes:
       - nginx-data:/data
       - ./nginx.conf:/etc/nginx/nginx.conf
@@ -29,7 +32,7 @@ services:
     depends_on:
       - broker
     ports:
-      - "8080"
+      - "8080:8080"
     container_name: "trino_coordinator"
     command: http://trinocoordinator:8080 coordinator
     volumes:
@@ -41,7 +44,7 @@ services:
       - trinocoordinator
     container_name: "trino_worker0"
     ports:
-      - "8081"
+      - "8781"
     command: http://trinocoordinator:8080 worker0
 
   worker1:
@@ -50,7 +53,7 @@ services:
       - trinocoordinator
     container_name: "trino_worker1"
     ports:
-      - "8081"
+      - "8782"
     command: http://trinocoordinator:8080 worker1
 
 # Metabase
@@ -85,10 +88,10 @@ services:
     environment:
       - ZOOKEEPER_SASL_ENABLED=true
       - ZOO_ENABLE_AUTH=yes
-      - ZOO_SERVER_USERS=kafka
-      - ZOO_SERVER_PASSWORDS=kafka_password
-      - ZOO_CLIENT_USER=kafka
-      - ZOO_CLIENT_PASSWORD=kafka_password
+      - ZOO_SERVER_USERS=kafka,druid
+      - ZOO_SERVER_PASSWORDS=kafka_password,druid_password
+      - ZOO_CLIENT_USER=zookeeper
+      - ZOO_CLIENT_PASSWORD=zookeeper_password
 
       - BITNAMI_DEBUG=true
 
@@ -178,6 +181,7 @@ services:
 # Kafka
   kafka:
     image: 'bitnami/kafka:latest'
+    container_name: "kafka"
     ports:
       - '9093:9093'
     environment:
@@ -185,7 +189,7 @@ services:
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
 
       # Security
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:SSL,CLIENT:SASL_SSL
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,CLIENT:SSL
       - KAFKA_CFG_LISTENERS=INTERNAL://:9092,CLIENT://:9093
       - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,CLIENT://kafka:9093
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
