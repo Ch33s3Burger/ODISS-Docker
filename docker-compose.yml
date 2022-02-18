@@ -42,7 +42,7 @@ services:
     image: "lewuathe/trino-worker:354"
     depends_on:
       - trinocoordinator
-    container_name: "trino_worker0"
+    container_name: "worker0"
     ports:
       - "8781"
     command: http://trinocoordinator:8080 worker0
@@ -51,7 +51,7 @@ services:
     image: "lewuathe/trino-worker:354"
     depends_on:
       - trinocoordinator
-    container_name: "trino_worker1"
+    container_name: "worker1"
     ports:
       - "8782"
     command: http://trinocoordinator:8080 worker1
