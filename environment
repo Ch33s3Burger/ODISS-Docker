@@ -55,7 +55,6 @@ druid.zk.service.user=druid
 druid.zk.service.pwd=druid_password
 druid_zk_service_host=zookeeper
 
-
 druid.worker.capacity=8
 
 druid.router.sql.enable=true
