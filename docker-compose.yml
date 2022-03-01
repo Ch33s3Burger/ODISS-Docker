@@ -28,35 +28,32 @@ services:
       - ./certs/:/etc/letsencrypt
 # Trino
   trinocoordinator:
-    image: 'trinodb/trino:latest'
-    hostname: trinocoordinator
-    ports:
-      - '8080:8080'
+    image: "lewuathe/trino-coordinator:354"
     depends_on:
       - broker
-    container_name: "trinocoordinator"
-#    command: http://trinocoordinator:8080 coordinator
+    ports:
+      - "8080:8080"
+    container_name: "trino_coordinator"
+    command: http://trinocoordinator:8080 coordinator
     volumes:
-      - ./etc/catalog:/etc/trino/catalog            
+      - ./trino:/usr/local/trino/etc  
 
-#  worker0:
-#    image: "lewuathe/trino-worker:354"
-#    depends_on:
-#      - trinocoordinator
-#    container_name: "worker0"
-#    ports:
-#      - "8781"
-#    command: http://trinocoordinator:8080 worker0
-
-#  worker1:
-#    image: "lewuathe/trino-worker:354"
-#    depends_on:
-#      - trinocoordinator
-#    container_name: "worker1"
-#    ports:
-#      - "8782"
-#    command: http://trinocoordinator:8080 worker1
-
+  worker0:
+    image: "lewuathe/trino-worker:354"
+    depends_on:
+      - trinocoordinator
+    container_name: "worker0"
+    ports:
+      - "8781"
+    command: http://trinocoordinator:8080 worker0
+  worker1:
+    image: "lewuathe/trino-worker:354"
+    depends_on:
+      - trinocoordinator
+    container_name: "worker1"
+    ports:
+      - "8782"
+    command: http://trinocoordinator:8080 worker1
 # Metabase
   metabase:
     image: "metabase/metabase:latest"
@@ -83,20 +80,17 @@ services:
 
   zookeeper:
     container_name: zookeeper
-    image: zookeeper:latest
+    image: zookeeper:3.7.0
     ports:
       - "2181"
     environment:
-      - ZOOKEEPER_SASL_ENABLED=true
-      - ZOO_ENABLE_AUTH=yes
-      - ZOO_SERVER_USERS=kafka,druid
-      - ZOO_SERVER_PASSWORDS=kafka_password,druid_password
-      - ZOO_CLIENT_USER=zookeeper
-      - ZOO_CLIENT_PASSWORD=zookeeper_password
+      - SERVER_JVMFLAGS=-Djava.security.auth.login.config=/etc/zookeeper/conf/zookeeper_jaas.conf
+      - KAFKA_OPTS=-Djava.security.auth.login.config=/etc/zookeeper/conf/kafka_jaas.conf
     volumes:
       - ./zoo.cfg:/conf/zoo.cfg
       - ./zookeeper_jaas.conf:/etc/zookeeper/conf/zookeeper_jaas.conf
-      - ./zookeeper.keytab:/conf/zookeeper.keytab
+      - ./kafka_jaas.conf:/etc/zookeeper/conf/kafka_jaas.conf
+
   coordinator:
     image: apache/druid:0.22.1
     container_name: coordinator
@@ -182,40 +176,18 @@ services:
 
 # Kafka
   kafka:
-    image: 'bitnami/kafka:latest'
+    image: 'bitnami/kafka:3.1.0'
     container_name: "kafka"
     ports:
       - '9093:9093'
     environment:
-      - KAFKA_BROKER_ID=11
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-
-      # Security
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,CLIENT:SASL_SSL
-      - KAFKA_CFG_LISTENERS=INTERNAL://:9092,CLIENT://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,CLIENT://kafka:9093
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL
-
-      - KAFKA_CLIENT_USER=user
-      - KAFKA_CLIENT_PASSWORD=password
-
-      - KAFKA_CERTIFICATE_PASSWORD=Lichtschwert123#
-      - KAFKA_TLS_TYPE=JKS # or PEM
-
-      - KAFKA_CFG_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM=     
-
-      # Zookeeper auth
-      - KAFKA_ZOOKEEPER_PROTOCOL=SASL
-      - KAFKA_ZOOKEEPER_USER=kafka
-      - KAFKA_ZOOKEEPER_PASSWORD=kafka_password
-
-      - ALLOW_ANONYMOUS_LOGIN=yes
-      # Logging
       - BITNAMI_DEBUG=true
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_OPTS=-Djava.security.auth.login.config=/opt/bitnami/kafka/config/kafka_jaas.conf
     depends_on:
       - zookeeper
     volumes:
       - ./keystore/kafka.keystore.jks:/opt/bitnami/kafka/config/certs/kafka.keystore.jks
       - ./truststore/kafka.truststore.jks:/opt/bitnami/kafka/config/certs/kafka.truststore.jks
-#      - ./server.properties:/opt/bitnami/kafka/config/server.properties
-#      - ./kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf
+      - ./server.properties:/bitnami/kafka/config/server.properties
+      - ./kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf
