@@ -1,0 +1,45 @@
+{
+  "type": "kafka",
+  "spec": {
+    "ioConfig": {
+      "type": "kafka",
+      "consumerProperties": {
+        "bootstrap.servers": "kafka:9092",
+        "security.protocol": "SASL_PLAINTEXT",
+        "sasl.mechanism": "PLAIN",
+        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin_password';"
+      },
+      "topic": "form",
+      "inputFormat": {
+        "type": "json"
+      },
+      "useEarliestOffset": true
+    },
+    "tuningConfig": {
+      "type": "kafka"
+    },
+    "dataSchema": {
+      "dataSource": "form",
+      "timestampSpec": {
+        "column": "!!!_no_such_column_!!!",
+        "missingValue": "2010-01-01T00:00:00Z"
+      },
+      "dimensionsSpec": {
+        "dimensions": [
+          "versionDescription",
+          "repeating",
+          "parentFormOID",
+          "formOID",
+          "name",
+          "revisionNotes",
+          "mandatory"
+        ]
+      },
+      "granularitySpec": {
+        "queryGranularity": "none",
+        "rollup": false,
+        "segmentGranularity": "all"
+      }
+    }
+  }
+}

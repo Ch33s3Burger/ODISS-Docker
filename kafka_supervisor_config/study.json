@@ -1,0 +1,56 @@
+{
+  "type": "kafka",
+  "spec": {
+    "ioConfig": {
+      "type": "kafka",
+      "consumerProperties": {
+        "bootstrap.servers": "kafka:9092",
+        "security.protocol": "SASL_PLAINTEXT",
+        "sasl.mechanism": "PLAIN",
+        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin_password';"
+      },
+      "topic": "study",
+      "inputFormat": {
+        "type": "json"
+      },
+      "useEarliestOffset": true
+    },
+    "tuningConfig": {
+      "type": "kafka"
+    },
+    "dataSchema": {
+      "dataSource": "study",
+      "timestampSpec": {
+        "column": "dateCreated",
+        "format": "auto"
+      },
+      "dimensionsSpec": {
+        "dimensions": [
+          "sponsor",
+          "expectedTotalEnrollment",
+          "studyName",
+          "purpose",
+          "studyDescription",
+          "sex",
+          "protocolType",
+          "officialTitle",
+          "resultsReference",
+          "detailedDescription",
+          "protocolName",
+          "healthyVolunteersAccepted",
+          "collaborators",
+          "studyPhase",
+          "studySytemStatus",
+          "studyOID",
+          "startDate",
+          "principalInvestigator"
+        ]
+      },
+      "granularitySpec": {
+        "queryGranularity": "none",
+        "rollup": false,
+        "segmentGranularity": "year"
+      }
+    }
+  }
+}
