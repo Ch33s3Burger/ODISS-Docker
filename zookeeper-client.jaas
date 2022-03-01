@@ -1,5 +1,0 @@
-Client {
-       org.apache.zookeeper.server.auth.DigestLoginModule required
-       user_super="kafka"
-       user_bob="kafka_password";
-};     
