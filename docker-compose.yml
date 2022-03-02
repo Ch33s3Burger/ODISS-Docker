@@ -8,7 +8,7 @@ volumes:
   coordinator_var: {}
   router_var: {}
   druid_shared: {}
-  nginx-data: {}
+  nginx-data: {}  
 
 services:
 # Security
@@ -38,7 +38,7 @@ services:
     volumes:
       - ./trino:/usr/local/trino/etc  
 
-  worker0:
+  worker:
     image: "lewuathe/trino-worker:354"
     depends_on:
       - trinocoordinator
@@ -46,14 +46,7 @@ services:
     ports:
       - "8781"
     command: http://trinocoordinator:8080 worker0
-  worker1:
-    image: "lewuathe/trino-worker:354"
-    depends_on:
-      - trinocoordinator
-    container_name: "worker1"
-    ports:
-      - "8782"
-    command: http://trinocoordinator:8080 worker1
+
 # Metabase
   metabase:
     image: "metabase/metabase:latest"
