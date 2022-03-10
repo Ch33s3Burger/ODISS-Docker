@@ -24,6 +24,7 @@ envsubst < config_templates/druid/druid_supervisor_config/subjectentry.json > co
 envsubst < config_templates/druid/druid_supervisor_config/user.json > config/druid/druid_supervisor_config/user.json
 
 envsubst < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
+envsubst < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
 
 touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}
