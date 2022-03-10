@@ -12,6 +12,8 @@ envsubst < config_templates/kafka/kafka_jaas.conf > config/kafka/kafka_jaas.conf
 envsubst < config_templates/kafka/server.properties > config/kafka/server.properties
 envsubst < config_templates/nginx/nginx.conf > config/nginx/nginx.conf
 envsubst < config_templates/trino/catalog/mpn.properties > config/trino/catalog/mpn.properties
+envsubst < config_templates/trino/log.properties > config/trino/log.properties
+envsubst < config_templates/zookeeper/zoo.cfg > config/zookeeper/zoo.cfg
 envsubst < config_templates/zookeeper/zookeeper_jaas.conf > config/zookeeper/zookeeper_jaas.conf
 
 envsubst < config_templates/druid/druid_supervisor_config/form.json > config/druid/druid_supervisor_config/form.json
@@ -25,6 +27,7 @@ envsubst < config_templates/druid/druid_supervisor_config/user.json > config/dru
 
 envsubst < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
 envsubst < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
+envsubst < scripts/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
 
 touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}

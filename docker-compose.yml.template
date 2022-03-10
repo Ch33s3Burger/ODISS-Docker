@@ -180,7 +180,7 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      - ./config/kafka/certs/kafka.keystore.jks:/opt/bitnami/kafka/config/certs/kafka.keystore.jks
-      - ./config/kafka/certs/kafka.truststore.jks:/opt/bitnami/kafka/config/certs/kafka.truststore.jks
+      - ./config/kafka/certs/${ODISS_KAFKA_KEYSTORE_FILE_NAME}:/opt/bitnami/kafka/config/certs/kafka.keystore.jks
+      - ./config/kafka/certs/${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}:/opt/bitnami/kafka/config/certs/kafka.truststore.jks
       - ./config/kafka/server.properties:/bitnami/kafka/config/server.properties
       - ./config/kafka/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf

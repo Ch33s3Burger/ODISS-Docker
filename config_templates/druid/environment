@@ -24,7 +24,7 @@ DRUID_MAXNEWSIZE=250m
 DRUID_NEWSIZE=250m
 DRUID_MAXDIRECTMEMORYSIZE=4096m
 
-druid_emitter_logging_logLevel=warn
+druid_emitter_logging_logLevel=${ODISS_DRUID_LOG_LEVEL}
 
 druid_extensions_loadList=["druid-hdfs-storage", "druid-kafka-indexing-service", "druid-datasketches", "druid-basic-security", "postgresql-metadata-storage"]
 
@@ -47,8 +47,8 @@ druid_indexer_logs_directory=/opt/shared/indexing-logs
 druid_processing_numThreads=2
 druid_processing_numMergeBuffers=2
 
-DRUID_LOG4J=<?xml version="1.0" encoding="UTF-8" ?><Configuration status="WARN"><Appenders><Console name="Console" target="SYSTEM_OUT"><PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/></Console></Appenders><Loggers><Root level="warn"><AppenderRef ref="Console"/></Root><Logger name="org.apache.druid.jetty.RequestLog" additivity="false" level="WARN"><AppenderRef ref="Console"/></Logger></Loggers></Configuration>
-DRUID_LOG_LEVEL=WARN
+DRUID_LOG4J=<?xml version="1.0" encoding="UTF-8" ?><Configuration status="${ODISS_DRUID_LOG_LEVEL}"><Appenders><Console name="Console" target="SYSTEM_OUT"><PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/></Console></Appenders><Loggers><Root level="${ODISS_DRUID_LOG_LEVEL}"><AppenderRef ref="Console"/></Root><Logger name="org.apache.druid.jetty.RequestLog" additivity="false" level="${ODISS_DRUID_LOG_LEVEL}"><AppenderRef ref="Console"/></Logger></Loggers></Configuration>
+DRUID_LOG_LEVEL=${ODISS_DRUID_LOG_LEVEL}
 
 druid_router_managementProxy_enabled=true
 
