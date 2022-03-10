@@ -2,5 +2,4 @@ config/
 metabase/
 docker-compose.yml
 data/
-scripts/kafka_cert_generator.sh
 scripts/nginx_cert_generator.sh
