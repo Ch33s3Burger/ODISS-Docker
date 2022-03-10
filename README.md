@@ -18,6 +18,12 @@ sh setup.sh
 
 4. Add or [Create](#CertCreation) the Kafka and Nginx Certificates.
 
+5. Start the docker containers.
+
+```
+docker-compose up -d
+```
+
 The **Kafka** Certificate location is under `config/kafka/certs/`.
 
 The **Nginx** Certificate location is under `config/nginx/certs/`.
