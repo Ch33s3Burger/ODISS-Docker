@@ -7,9 +7,9 @@
         "bootstrap.servers": "kafka:9092",
         "security.protocol": "SASL_PLAINTEXT",
         "sasl.mechanism": "PLAIN",
-        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin_password';"
+        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='${ODISS_KAFKA_KAFKASERVER_USERNAME}' password='${ODISS_KAFKA_KAFKASERVER_PASSWORD}';"
       },
-      "topic": "itemgroup",
+      "topic": "subject",
       "inputFormat": {
         "type": "json"
       },
@@ -19,24 +19,29 @@
       "type": "kafka"
     },
     "dataSchema": {
-      "dataSource": "itemgroup",
+      "dataSource": "subject",
       "timestampSpec": {
-        "column": "!!!_no_such_column_!!!",
-        "missingValue": "2010-01-01T00:00:00Z"
+        "column": "subjectCreatedDate",
+        "format": "iso"
       },
       "dimensionsSpec": {
         "dimensions": [
-          "repeating",
-          "sasDatasetName",
-          "name",
-          "itemGroupOID",
-          "mandatory"
+          "userCreatedSubject",
+          "studySubjectID",
+          "sex",
+          "subjectKey",
+          {
+            "type": "long",
+            "name": "uniqueIdentifier"
+          },
+          "status",
+          "yearOfBirth"
         ]
       },
       "granularitySpec": {
         "queryGranularity": "none",
         "rollup": false,
-        "segmentGranularity": "all"
+        "segmentGranularity": "day"
       }
     }
   }

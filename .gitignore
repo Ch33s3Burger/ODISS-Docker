@@ -1,0 +1,4 @@
+config/
+metabase/
+/docker-compose.yml
+data/

@@ -7,9 +7,9 @@
         "bootstrap.servers": "kafka:9092",
         "security.protocol": "SASL_PLAINTEXT",
         "sasl.mechanism": "PLAIN",
-        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin_password';"
+        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='${ODISS_KAFKA_KAFKASERVER_USERNAME}' password='${ODISS_KAFKA_KAFKASERVER_PASSWORD}';"
       },
-      "topic": "form",
+      "topic": "user",
       "inputFormat": {
         "type": "json"
       },
@@ -19,20 +19,19 @@
       "type": "kafka"
     },
     "dataSchema": {
-      "dataSource": "form",
+      "dataSource": "user",
       "timestampSpec": {
         "column": "!!!_no_such_column_!!!",
         "missingValue": "2010-01-01T00:00:00Z"
       },
       "dimensionsSpec": {
         "dimensions": [
-          "versionDescription",
-          "repeating",
-          "parentFormOID",
-          "formOID",
-          "name",
-          "revisionNotes",
-          "mandatory"
+          "firstName",
+          "lastName",
+          "userOID",
+          "organization",
+          "fullName",
+          "studyOID"
         ]
       },
       "granularitySpec": {

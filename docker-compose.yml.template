@@ -24,8 +24,8 @@ services:
       - trinocoordinator
     volumes:
       - nginx-data:/data
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certs/:/etc/letsencrypt
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx/certs/:/etc/letsencrypt
 # Trino
   trinocoordinator:
     image: "lewuathe/trino-coordinator:354"
@@ -36,7 +36,7 @@ services:
     container_name: "trino_coordinator"
     command: http://trinocoordinator:8080 coordinator
     volumes:
-      - ./trino:/usr/local/trino/etc  
+      - ./config/trino:/usr/local/trino/etc  
 
   worker:
     image: "lewuathe/trino-worker:354"
@@ -54,7 +54,7 @@ services:
       - "3000"
     container_name: "metabase"
     volumes:
-      - ./metabase:/tmp
+      - ./data/metabase:/tmp
     environment:
       - MB_DB_FILE=/tmp/metabase.db
     depends_on:
@@ -67,8 +67,8 @@ services:
     volumes:
       - metadata_data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=FoolishPassword
-      - POSTGRES_USER=druid
+      - POSTGRES_PASSWORD=${ODISS_POSTGRES_PASSWORD}
+      - POSTGRES_USER=${ODISS_POSTGRES_USER}
       - POSTGRES_DB=druid
 
   zookeeper:
@@ -80,9 +80,9 @@ services:
       - SERVER_JVMFLAGS=-Djava.security.auth.login.config=/etc/zookeeper/conf/zookeeper_jaas.conf
       - KAFKA_OPTS=-Djava.security.auth.login.config=/etc/zookeeper/conf/kafka_jaas.conf
     volumes:
-      - ./zoo.cfg:/conf/zoo.cfg
-      - ./zookeeper_jaas.conf:/etc/zookeeper/conf/zookeeper_jaas.conf
-      - ./kafka_jaas.conf:/etc/zookeeper/conf/kafka_jaas.conf
+      - ./config/zookeeper/zoo.cfg:/conf/zoo.cfg
+      - ./config/zookeeper/zookeeper_jaas.conf:/etc/zookeeper/conf/zookeeper_jaas.conf
+      - ./config/kafka/kafka_jaas.conf:/etc/zookeeper/conf/kafka_jaas.conf
 
   coordinator:
     image: apache/druid:0.22.1
@@ -98,7 +98,7 @@ services:
     command:
       - coordinator
     env_file:
-      - environment
+      - ./config/druid/environment
 
   broker:
     image: apache/druid:0.22.1
@@ -114,7 +114,7 @@ services:
     command:
       - broker
     env_file:
-      - environment
+      - ./config/druid/environment
 
   historical:
     image: apache/druid:0.22.1
@@ -131,7 +131,7 @@ services:
     command:
       - historical
     env_file:
-      - environment
+      - ./config/druid/environment
 
   middlemanager:
     image: apache/druid:0.22.1
@@ -149,7 +149,7 @@ services:
     command:
       - middleManager
     env_file:
-      - environment
+      - ./config/druid/environment
 
   router:
     image: apache/druid:0.22.1
@@ -165,7 +165,7 @@ services:
     command:
       - router
     env_file:
-      - environment
+      - ./config/druid/environment
 
 # Kafka
   kafka:
@@ -180,7 +180,7 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      - ./keystore/kafka.keystore.jks:/opt/bitnami/kafka/config/certs/kafka.keystore.jks
-      - ./truststore/kafka.truststore.jks:/opt/bitnami/kafka/config/certs/kafka.truststore.jks
-      - ./server.properties:/bitnami/kafka/config/server.properties
-      - ./kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf
+      - ./config/kafka/certs/kafka.keystore.jks:/opt/bitnami/kafka/config/certs/kafka.keystore.jks
+      - ./config/kafka/certs/kafka.truststore.jks:/opt/bitnami/kafka/config/certs/kafka.truststore.jks
+      - ./config/kafka/server.properties:/bitnami/kafka/config/server.properties
+      - ./config/kafka/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf

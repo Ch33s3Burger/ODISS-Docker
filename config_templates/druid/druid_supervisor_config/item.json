@@ -7,9 +7,9 @@
         "bootstrap.servers": "kafka:9092",
         "security.protocol": "SASL_PLAINTEXT",
         "sasl.mechanism": "PLAIN",
-        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin_password';"
+        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='${ODISS_KAFKA_KAFKASERVER_USERNAME}' password='${ODISS_KAFKA_KAFKASERVER_PASSWORD}';"
       },
-      "topic": "studyevent",
+      "topic": "item",
       "inputFormat": {
         "type": "json"
       },
@@ -19,22 +19,34 @@
       "type": "kafka"
     },
     "dataSchema": {
-      "dataSource": "studyevent",
+      "dataSource": "item",
       "timestampSpec": {
         "column": "!!!_no_such_column_!!!",
         "missingValue": "2010-01-01T00:00:00Z"
       },
       "dimensionsSpec": {
         "dimensions": [
+          "measurementUnitName",
+          "itemOID",
+          "dataType",
+          "name",
           {
             "type": "long",
-            "name": "orderNumber"
+            "name": "length"
           },
-          "repeating",
-          "name",
-          "type",
+          "measurementUnitOID",
+          {
+            "type": "long",
+            "name": "OrderNumber"
+          },
+          "comment",
+          "sasFieldName",
+          "measurementUnitText",
           "mandatory",
-          "studyEventOID"
+          {
+            "type": "long",
+            "name": "significantDigits"
+          }
         ]
       },
       "granularitySpec": {
