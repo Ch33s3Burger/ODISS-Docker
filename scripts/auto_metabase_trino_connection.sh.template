@@ -1,0 +1,19 @@
+#!/bin/bash
+id=$(curl -k -X POST   -H "Content-Type: application/json"   -d '{"username": "${ODISS_METABASE_ADMIN_EMAIL}", "password": "${ODISS_METABASE_ADMIN_PASSWORD}"}'   https://${ODISS_SERVER_NAME}/metabase/api/session | \
+	python3 -c "import sys, json; print(json.load(sys.stdin)['id'])")
+
+curl -k -s -X POST \
+    -H "Content-type: application/json" \
+    -H "X-Metabase-Session: ${id}" \
+    https://odiss-imi.de/metabase/api/database \
+    -d '{
+        "engine": "presto-jdbc",
+        "name": "TestViaPostRequest",
+        "details": {
+            "host": "trinocoordinator",
+            "port": "8080",
+            "catalog": "mpn",
+            "schema": "druid",
+            "user": "${ODISS_TRINO_USERNAME}"
+        }
+    }'

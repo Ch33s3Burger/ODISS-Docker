@@ -13,14 +13,18 @@ KEYSTORE_SIGN_REQUEST_SRL="ca-cert.srl"
 KEYSTORE_SIGNED_CERT="cert-signed"
 
 function file_exists_and_exit() {
-  echo "'$1' cannot exist. Move or delete it before"
-  echo "re-running this script."
-  exit 1
+  echo "'$1' already exists. Do you still want to create the file there? They will all be deleted first. [yn]"
+  read still_create
+  if [ "$still_create" == "n" ]; then 
+    exit 1
+  fi
 }
 
 if [ -e "$KEYSTORE_WORKING_DIRECTORY" ]; then
   file_exists_and_exit $KEYSTORE_WORKING_DIRECTORY
+  rm -rf $KEYSTORE_WORKING_DIRECTORY
 fi
+mkdir $TRUSTSTORE_WORKING_DIRECTORY
 
 if [ -e "$CA_CERT_FILE" ]; then
   file_exists_and_exit $CA_CERT_FILE
@@ -52,11 +56,6 @@ trust_store_file=""
 trust_store_private_key_file=""
 
 if [ "$generate_trust_store" == "y" ]; then
-  if [ -e "$TRUSTSTORE_WORKING_DIRECTORY" ]; then
-    file_exists_and_exit $TRUSTSTORE_WORKING_DIRECTORY
-  fi
-
-  mkdir $TRUSTSTORE_WORKING_DIRECTORY
   echo
   echo "OK, we'll generate a trust store and associated private key."
   echo
@@ -122,7 +121,6 @@ echo
 echo "Continuing with:"
 echo " - trust store file:        $trust_store_file"
 echo " - trust store private key: $trust_store_private_key_file"
-
 
 echo
 echo "Now, a keystore will be generated. Each broker and logical client needs its own"

@@ -26,8 +26,9 @@ envsubst < config_templates/druid/druid_supervisor_config/subjectentry.json > co
 envsubst < config_templates/druid/druid_supervisor_config/user.json > config/druid/druid_supervisor_config/user.json
 
 envsubst < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
-envsubst < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
-envsubst < scripts/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
+envsubst '${ODISS_TRINO_USERNAME} ${ODISS_SERVER_NAME} ${ODISS_METABASE_ADMIN_EMAIL} ${ODISS_METABASE_ADMIN_PASSWORD}"}' < scripts/auto_metabase_trino_connection.sh.template > scripts/auto_metabase_trino_connection.sh
+envsubst '${ODISS_NGINX_KEY_FILE_NAME} ${ODISS_NGINX_CERT_FILE_NAME}' < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
+envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}' < scripts/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
 
 touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}

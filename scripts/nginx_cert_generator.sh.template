@@ -1,1 +1,16 @@
+#!/usr/bin/bash bash
+
+set -e
+
+NGINX_CERT_LOCATION="../config/nginx/certs/"
+
+if [ -e "$NGINX_CERT_LOCATION" ]; then
+  echo "Directoy already exists. you still want to create the file there? They will all be deleted first. [yn]"
+  read still_create
+  if [ "$still_create" == "n" ]; then
+    exit 1 
+  fi
+  rm -rf $NGINX_CERT_LOCATION/*
+fi
+mkdir $NGINX_CERT_LOCATION
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ../config/nginx/certs/${ODISS_NGINX_KEY_FILE_NAME} -out ../config/nginx/certs/${ODISS_NGINX_CERT_FILE_NAME}
