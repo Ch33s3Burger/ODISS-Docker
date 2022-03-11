@@ -55,8 +55,11 @@ services:
     container_name: "metabase"
     volumes:
       - ./data/metabase:/tmp
+      - ./config/metabase/log4j2.xml:/tmp/log4j2.xml
     environment:
       - MB_DB_FILE=/tmp/metabase.db
+      - MB_EMOJI_IN_LOGS=false
+      - JAVA_OPTS=-Dlog4j.configurationFile=file:///tmp/log4j2.xml
     depends_on:
       - trinocoordinator
 
@@ -180,7 +183,7 @@ services:
     depends_on:
       - zookeeper
     volumes:
-      - ./config/kafka/certs/${ODISS_KAFKA_KEYSTORE_FILE_NAME}:/opt/bitnami/kafka/config/certs/kafka.keystore.jks
-      - ./config/kafka/certs/${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}:/opt/bitnami/kafka/config/certs/kafka.truststore.jks
+      - ./config/kafka/certs/:/opt/bitnami/kafka/config/certs/
       - ./config/kafka/server.properties:/bitnami/kafka/config/server.properties
       - ./config/kafka/kafka_jaas.conf:/opt/bitnami/kafka/config/kafka_jaas.conf
+      - ./config/kafka/log4j.properties:/bitnami/kafka/config/log4j.properties

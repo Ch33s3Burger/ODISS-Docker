@@ -10,11 +10,13 @@ envsubst < docker-compose.yml.template > docker-compose.yml
 envsubst < config_templates/druid/environment > config/druid/environment
 envsubst < config_templates/kafka/kafka_jaas.conf > config/kafka/kafka_jaas.conf
 envsubst < config_templates/kafka/server.properties > config/kafka/server.properties
+envsubst < config_templates/kafka/log4j.properties > config/kafka/log4j.properties
 envsubst < config_templates/nginx/nginx.conf > config/nginx/nginx.conf
 envsubst < config_templates/trino/catalog/mpn.properties > config/trino/catalog/mpn.properties
 envsubst < config_templates/trino/log.properties > config/trino/log.properties
 envsubst < config_templates/zookeeper/zoo.cfg > config/zookeeper/zoo.cfg
 envsubst < config_templates/zookeeper/zookeeper_jaas.conf > config/zookeeper/zookeeper_jaas.conf
+envsubst < config_templates/metabase/log4j2.xml > config/metabase/log4j2.xml
 
 envsubst < config_templates/druid/druid_supervisor_config/form.json > config/druid/druid_supervisor_config/form.json
 envsubst < config_templates/druid/druid_supervisor_config/item.json > config/druid/druid_supervisor_config/item.json
