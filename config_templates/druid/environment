@@ -19,10 +19,10 @@
 
 # Java tuning
 DRUID_XMX=1g
-DRUID_XMS=512m
+DRUID_XMS=1g
 DRUID_MAXNEWSIZE=250m
 DRUID_NEWSIZE=250m
-DRUID_MAXDIRECTMEMORYSIZE=4096m
+DRUID_MAXDIRECTMEMORYSIZE=6172m
 
 druid_emitter_logging_logLevel=${ODISS_DRUID_LOG_LEVEL}
 
@@ -36,7 +36,7 @@ druid_metadata_storage_connector_password=${ODISS_POSTGRES_PASSWORD}
 
 druid_coordinator_balancer_strategy=cachingCost
 
-druid_indexer_runner_javaOptsArray=["-server", "-Xmx1g", "-Xms512m", "-XX:MaxDirectMemorySize=512m", "-Duser.timezone=UTC", "-Dfile.encoding=UTF-8", "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]
+druid_indexer_runner_javaOptsArray=["-server", "-Xmx1g", "-Xms1g", "-XX:MaxDirectMemorySize=3g", "-Duser.timezone=UTC", "-Dfile.encoding=UTF-8", "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]
 druid_indexer_fork_property_druid_processing_buffer_sizeBytes=256MiB
 
 druid_storage_type=local
