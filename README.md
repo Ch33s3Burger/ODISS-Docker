@@ -17,7 +17,7 @@ git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
 sh setup.sh
 ```
 
-4. [Add](#certs) or [Create](./scripts/SCIPTS.md) the Kafka and Nginx Certificates.
+4. [Add](#certs) or [Create](./scripts/SCIPTS.md#self-signed-certificate-creation) the Kafka and Nginx Certificates.
 
 5. Start the docker containers.
 
@@ -29,9 +29,9 @@ docker-compose up -d
 
     * Open `https://<sever-name>/metabase` in your browser.
     * Follow the steps and use the same login data defined in your [config](#metabase_config). (You can always adjust the settings later and run the setup script again)
-    * Run the ["Auto Metabase to Trino connection"](./scripts/SCIPTS.md) script to access the Druid Data in Metabase.
+    * Run the ["Auto Metabase to Trino connection"](./scripts/SCIPTS.md#auto-metabase-to-trino-connection) script to access the Druid Data in Metabase.
     
-7. Add Kafka ingestion in Druid. Run the ["Auto Kafka Ingestion"](./scripts/SCIPTS.md) script to make Druid listen to the Kafka topics. This will automatically import new Data that has been added to the Kafka Streams.
+7. Add Kafka ingestion in Druid. Run the ["Auto Kafka Ingestion"](./scripts/SCIPTS.md#auto-kafka-ingestion) script to make Druid listen to the Kafka topics. This will automatically import new Data that has been added to the Kafka Streams.
 
 ## Configuration <a name="config"></a>
 
