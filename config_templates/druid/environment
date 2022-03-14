@@ -87,6 +87,6 @@ druid_escalator_authorizerName=MyBasicMetadataAuthorizer
  
 druid_auth_authorizers=["MyBasicMetadataAuthorizer"]
  
-druid_auth_authorizer_MyBasicMetadataAuthorizer.type=basic
+druid_auth_authorizer_MyBasicMetadataAuthorizer_type=basic
  
 druid_javascript_enabled=true
