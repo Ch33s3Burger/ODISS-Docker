@@ -13,7 +13,9 @@
       "inputFormat": {
         "type": "json"
       },
-      "useEarliestOffset": true
+      "useEarliestOffset": true,
+      "taskDuration": "PT10M",
+      "completionTimeout": "PT10M"
     },
     "tuningConfig": {
       "type": "kafka"
