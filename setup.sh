@@ -1,13 +1,16 @@
 #!/bin/bash
 
-ENV=${1:-dev}
+SERVER_SIZE=${1:-nano}
+
+ENV=${2:-dev}
 
 export $(grep -v '^#' ./env/${ENV}.properties | xargs)
+export SERVER_SIZE
 
 cp -R ./config_templates/. ./config
 
 envsubst < docker-compose.yml.template > docker-compose.yml
-envsubst < config_templates/druid/environment > config/druid/environment
+envsubst < config_templates/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties > config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
 envsubst < config_templates/kafka/kafka_jaas.conf > config/kafka/kafka_jaas.conf
 envsubst < config_templates/kafka/server.properties > config/kafka/server.properties
 envsubst < config_templates/kafka/log4j.properties > config/kafka/log4j.properties

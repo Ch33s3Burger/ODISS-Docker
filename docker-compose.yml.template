@@ -101,7 +101,8 @@ services:
     command:
       - coordinator
     env_file:
-      - ./config/druid/environment
+      - ./config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
+      - ./config/druid/single-server/${SERVER_SIZE}/coordinator-overlord/runtime.properties
 
   broker:
     image: apache/druid:0.22.1
@@ -117,7 +118,8 @@ services:
     command:
       - broker
     env_file:
-      - ./config/druid/environment
+      - ./config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
+      - ./config/druid/single-server/${SERVER_SIZE}/broker/runtime.properties
 
   historical:
     image: apache/druid:0.22.1
@@ -134,7 +136,8 @@ services:
     command:
       - historical
     env_file:
-      - ./config/druid/environment
+      - ./config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
+      - ./config/druid/single-server/${SERVER_SIZE}/historical/runtime.properties
 
   middlemanager:
     image: apache/druid:0.22.1
@@ -152,7 +155,8 @@ services:
     command:
       - middleManager
     env_file:
-      - ./config/druid/environment
+      - ./config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
+      - ./config/druid/single-server/${SERVER_SIZE}/middleManager/runtime.properties
 
   router:
     image: apache/druid:0.22.1
@@ -168,7 +172,8 @@ services:
     command:
       - router
     env_file:
-      - ./config/druid/environment
+      - ./config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
+      - ./config/druid/single-server/${SERVER_SIZE}/router/runtime.properties
 
 # Kafka
   kafka:
