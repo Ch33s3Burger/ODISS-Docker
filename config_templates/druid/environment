@@ -18,75 +18,75 @@
 #
 
 # Java tuning
-DRUID_XMX=1g
-DRUID_XMS=1g
-DRUID_MAXNEWSIZE=250m
-DRUID_NEWSIZE=250m
-DRUID_MAXDIRECTMEMORYSIZE=6172m
+DRUID.XMX=1g
+DRUID.XMS=1g
+DRUID.MAXNEWSIZE=250m
+DRUID.NEWSIZE=250m
+DRUID.MAXDIRECTMEMORYSIZE=6172m
 
-druid_emitter_logging_logLevel=${ODISS_DRUID_LOG_LEVEL}
+druid.emitter.logging.logLevel=${ODISS_DRUID_LOG_LEVEL}
 
-druid_extensions_loadList=["druid-hdfs-storage", "druid-kafka-indexing-service", "druid-datasketches", "druid-basic-security", "postgresql-metadata-storage"]
+druid.extensions.loadList=["druid-hdfs-storage", "druid-kafka-indexing-service", "druid-datasketches", "druid-basic-security", "postgresql-metadata-storage"]
 
-druid_metadata_storage_host=
-druid_metadata_storage_type=postgresql
-druid_metadata_storage_connector_connectURI=jdbc:postgresql://postgres:5432/druid
-druid_metadata_storage_connector_user=${ODISS_POSTGRES_USER}
-druid_metadata_storage_connector_password=${ODISS_POSTGRES_PASSWORD}
+druid.metadata.storage.host=
+druid.metadata.storage.type=postgresql
+druid.metadata.storage.connector.connectURI=jdbc:postgresql://postgres:5432/druid
+druid.metadata.storage.connector.user=${ODISS_POSTGRES_USER}
+druid.metadata.storage.connector.password=${ODISS_POSTGRES_PASSWORD}
 
-druid_coordinator_balancer_strategy=cachingCost
+druid.coordinator.balancer.strategy=cachingCost
 
-druid_indexer_runner_javaOptsArray=["-server", "-Xmx1g", "-Xms1g", "-XX:MaxDirectMemorySize=3g", "-Duser.timezone=UTC", "-Dfile.encoding=UTF-8", "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]
-druid_indexer_fork_property_druid_processing_buffer_sizeBytes=256MiB
+druid.indexer.runner.javaOptsArray=["-server", "-Xmx1g", "-Xms1g", "-XX:MaxDirectMemorySize=3g", "-Duser.timezone=UTC", "-Dfile.encoding=UTF-8", "-Djava.util.logging.manager=org.apache.logging.log4j.jul.LogManager"]
+druid.indexer.fork.property.druid.processing.buffer.sizeBytes=256MiB
 
-druid_storage_type=local
-druid_storage_storageDirectory=/opt/shared/segments
-druid_indexer_logs_type=file
-druid_indexer_logs_directory=/opt/shared/indexing-logs
+druid.storage.type=local
+druid.storage.storageDirectory=/opt/shared/segments
+druid.indexer.logs.type=file
+druid.indexer.logs.directory=/opt/shared/indexing-logs
 
-druid_processing_numThreads=2
-druid_processing_numMergeBuffers=2
+druid.processing.numThreads=2
+druid.processing.numMergeBuffers=2
 
-DRUID_LOG4J=<?xml version="1.0" encoding="UTF-8" ?><Configuration status="${ODISS_DRUID_LOG_LEVEL}"><Appenders><Console name="Console" target="SYSTEM_OUT"><PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/></Console></Appenders><Loggers><Root level="${ODISS_DRUID_LOG_LEVEL}"><AppenderRef ref="Console"/></Root><Logger name="org.apache.druid.jetty.RequestLog" additivity="false" level="${ODISS_DRUID_LOG_LEVEL}"><AppenderRef ref="Console"/></Logger></Loggers></Configuration>
-DRUID_LOG_LEVEL=${ODISS_DRUID_LOG_LEVEL}
+DRUID.LOG4J=<?xml version="1.0" encoding="UTF-8" ?><Configuration status="${ODISS_DRUID_LOG_LEVEL}"><Appenders><Console name="Console" target="SYSTEM_OUT"><PatternLayout pattern="%d{ISO8601} %p [%t] %c - %m%n"/></Console></Appenders><Loggers><Root level="${ODISS_DRUID_LOG_LEVEL}"><AppenderRef ref="Console"/></Root><Logger name="org.apache.druid.jetty.RequestLog" additivity="false" level="${ODISS_DRUID_LOG_LEVEL}"><AppenderRef ref="Console"/></Logger></Loggers></Configuration>
+DRUID.LOG.LEVEL=${ODISS_DRUID_LOG_LEVEL}
 
-druid_router_managementProxy_enabled=true
+druid.router.managementProxy.enabled=true
 
 # Zookeeper
-druid_zk_service_user=${ODISS_ZOOKEEPER_SERVER_DRUID_USERNAME}
-druid_zk_service_pwd=${ODISS_ZOOKEEPER_SERVER_DRUID_PASSWORD}
-druid_zk_service_host=zookeeper
+druid.zk.service.user=${ODISS_DRUID_ZOOKEEPER_SERVER_USERNAME}
+druid.zk.service.pwd=${ODISS_DRUID_ZOOKEEPER_SERVER_PASSWORD}
+druid.zk.service.host=zookeeper
 
-druid_worker_capacity=2
+druid.worker.capacity=2
 
-druid_router_sql_enable=true
+druid.router.sql.enable=true
 
 # Druid basic security
-druid_auth_authenticatorChain=["MyBasicMetadataAuthenticator"]
-druid_auth_authenticator_MyBasicMetadataAuthenticator_type=basic
+druid.auth.authenticatorChain=["MyBasicMetadataAuthenticator"]
+druid.auth.authenticator.MyBasicMetadataAuthenticator.type=basic
  
 # Default password for 'admin' user, should be changed for production.
-druid_auth_authenticator_MyBasicMetadataAuthenticator_initialAdminPassword=${ODISS_DRUID_ADMIN_PASSWORD}
+druid.auth.authenticator.MyBasicMetadataAuthenticator.initialAdminPassword=${ODISS_DRUID_ADMIN_PASSWORD}
  
 # Default password for internal 'druid_system' user, should be changed for production.
-druid_auth_authenticator_MyBasicMetadataAuthenticator_initialInternalClientPassword=${ODISS_DRUID_DRUID_SYSTEM_PASSWORD}
+druid.auth.authenticator.MyBasicMetadataAuthenticator.initialInternalClientPassword=${ODISS_DRUID_DRUID_SYSTEM_PASSWORD}
  
 # Uses the metadata store for storing users, you can use authentication API to create new users and grant permissions
-druid_auth_authenticator_MyBasicMetadataAuthenticator_credentialsValidator_type=metadata
+druid.auth.authenticator.MyBasicMetadataAuthenticator.credentialsValidator.type=metadata
  
 # If true and the request credential doesn't exists in this credentials store, the request will proceed to next Authenticator in the chain.
-druid_auth_authenticator_MyBasicMetadataAuthenticator_skipOnFailure=false
+druid.auth.authenticator.MyBasicMetadataAuthenticator.skipOnFailure=false
  
-druid_auth_authenticator_MyBasicMetadataAuthenticator_authorizerName=MyBasicMetadataAuthorizer
+druid.auth.authenticator.MyBasicMetadataAuthenticator.authorizerName=MyBasicMetadataAuthorizer
  
 # Escalator
-druid_escalator_type=basic
-druid_escalator_internalClientUsername=${ODISS_DRUID_INTERNAL_CLIENT_USERNAME}
-druid_escalator_internalClientPassword=${ODISS_DRUID_INTERNAL_CLIENT_PASSWORD}
-druid_escalator_authorizerName=MyBasicMetadataAuthorizer
+druid.escalator.type=basic
+druid.escalator.internalClientUsername=${ODISS_DRUID_INTERNAL_CLIENT_USERNAME}
+druid.escalator.internalClientPassword=${ODISS_DRUID_INTERNAL_CLIENT_PASSWORD}
+druid.escalator.authorizerName=MyBasicMetadataAuthorizer
  
-druid_auth_authorizers=["MyBasicMetadataAuthorizer"]
+druid.auth.authorizers=["MyBasicMetadataAuthorizer"]
  
-druid_auth_authorizer_MyBasicMetadataAuthorizer_type=basic
+druid.auth.authorizer.MyBasicMetadataAuthorizer.type=basic
  
-druid_javascript_enabled=true
+druid.javascript.enabled=true
