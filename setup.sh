@@ -7,7 +7,17 @@ ENV=${2:-dev}
 export $(grep -v '^#' ./env/${ENV}.properties | xargs)
 export SERVER_SIZE
 
-cp -R ./config_templates/. ./config
+mkdir -p "./config/druid/single-server"
+
+cp -R ./config_templates/kafka/. ./config/kafka
+cp -R ./config_templates/metabase/. ./config/metabase
+cp -R ./config_templates/nginx/. ./config/nginx
+cp -R ./config_templates/trino/. ./config/trino
+cp -R ./config_templates/zookeeper/. ./config/zookeeper
+
+
+cp -R ./config_templates/druid/druid_supervisor_config/. ./config/druid/druid_supervisor_config
+cp -R ./config_templates/druid/single-server/${SERVER_SIZE}/. ./config/druid/single-server/${SERVER_SIZE}
 
 envsubst < docker-compose.yml.template > docker-compose.yml
 envsubst < config_templates/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties > config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
