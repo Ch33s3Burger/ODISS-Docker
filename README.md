@@ -1,6 +1,40 @@
 # ODISS-Docker
 
+## Requirements
+
+The software requirements for the installation machine are:
+
+ * Linux, Mac OS X, or other Unix-like OS (Windows is not supported)
+ * Java 8, Update 92 or later (8u92+)
+
+Before installing in production, be sure to run it under a user with limited rights.
+This is important because the Druid Console user will have, effectively, the same permissions as that user.
+
+### Single Server 
+
+The single server Apache Druid applications can be setup in 6 different sizes.
+Each size has different requirements for the system. The smallest one is the **nano** configuration.
+And the biggest one is the **xlarge** configuration.</br>
+The **small, medium, large** and **xlarge** configurations are intended for general use single-machine deployments. 
+They are sized for hardware roughly based on Amazon's i3 series of EC2 instances.</br>
+For more detail regarding the Single Server deployment of Druid take a look at their [documentation](https://druid.apache.org/docs/latest/operations/single-server.html).
+
+#### System requirements for each configuration
+
+ * Nano: 1 CPU, 4GiB RAM
+ * Micro: 4 CPU, 16GiB RAM
+ * Small: 8 CPU, 64GiB RAM (~i3.2xlarge)
+ * Medium: 16 CPU, 128GiB RAM (~i3.4xlarge)
+ * Large: 32 CPU, 256GiB RAM (~i3.8xlarge)
+ * X-Large: 64 CPU, 512GiB RAM (~i3.16xlarge)
+
 ## Installation
+
+### Single Server
+
+The following installation guide discribes the procedure to setup this project on a single machine.
+You can customize the Apache Druid applications to fit the system size.
+
 
 1. Clone the Repository
 
@@ -11,10 +45,11 @@ git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
 2. Edit the config under `env/dev.properties` (For details on the variables take a look at
    the [configuration settings](#config))
 
-3. Run the `setup.sh` script.
+3. Run the `setup.sh` script. With your chosen server size. </br>
+   Possible options are: nano, micro, small, medium, large, xlarge
 
 ```
-sh setup.sh
+sh setup.sh micro
 ```
 
 4. [Add](#certs) or [Create](./scripts/SCIPTS.md#self-signed-certificate-creation) the Kafka and Nginx Certificates.
@@ -25,13 +60,9 @@ sh setup.sh
 docker-compose up -d
 ```
 
-6. Setup Metabase
+6. Setup Metabase. Run the ["Auto Metabase Setup"](./scripts/SCIPTS.md#auto-kafka-ingestion)
 
-    * Open `https://<sever-name>/metabase` in your browser.
-    * Follow the steps and use the same login data defined in your [config](#metabase_config). (You can always adjust the settings later and run the setup script again)
-    * Run the ["Auto Metabase to Trino connection"](./scripts/SCIPTS.md#auto-metabase-to-trino-connection) script to access the Druid Data in Metabase.
-    
-7. Add Kafka ingestion in Druid. Run the ["Auto Kafka Ingestion"](./scripts/SCIPTS.md#auto-kafka-ingestion) script to make Druid listen to the Kafka topics. This will automatically import new Data that has been added to the Kafka Streams.
+7. Add Kafka ingestion in Druid. Run the ["Auto Kafka Ingestion"](./scripts/SCIPTS.md#auto-metabase-setup) script to make Druid listen to the Kafka topics. This will automatically import new Data that has been added to the Kafka Streams.
 
 ## Configuration <a name="config"></a>
 
