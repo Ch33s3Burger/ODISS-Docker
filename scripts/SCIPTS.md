@@ -21,6 +21,8 @@ This is necessary because of the authentication with the respective container an
 
 ## Self signed Certificate creation<a name="CertCreation"></a>
 
+The generated certificates create by those scripts are only self-signed. 
+This can be used for development. Before going into production you should get official certificates signed by an external official company.
 
 ### Kafka Certificate generator
 

@@ -141,3 +141,13 @@ For more information about the scripts and how to execute them look into the [SC
 documentation.
 
 Both files can be genereated for testing with the [Nginx Certificate generator](./scripts/SCIPTS.md) script.
+
+## Backups
+
+Since all applications run as Docker containers a backup can be done by following the [official docker guidelines](https://docs.docker.com/desktop/backup-and-restore/).
+Overall only Metabase and Druid contain valuable data. Druid holds the data in seven different volumes. 
+Each container has its own volume. The metadata is saved in postgres in the "metadata_data" volume.
+And the data is saved in the "druid_shared" volume. The remaining volumes contain more temporary metadata. </br>
+Metabase uses a local database which is located in the "metabase_data" volume. </br>
+In conclusion for backing up this project you should save all volumes as images. 
+And for restoring it you just have to reload those images like described in the [official docker guidelines](https://docs.docker.com/desktop/backup-and-restore/).
