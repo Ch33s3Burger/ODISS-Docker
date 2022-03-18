@@ -21,6 +21,8 @@ This is necessary because of the authentication with the respective container an
 
 ## Self signed Certificate creation<a name="CertCreation"></a>
 
+The generated certificates create by those scripts are only self-signed. 
+This can be used for development. Before going into production you should get official certificates signed by an external official company.
 
 ### Kafka Certificate generator
 
@@ -59,12 +61,12 @@ Run the `auto_kafka_ingestion.sh` script from within the `script/` folder.
 sh auto_kafka_ingestion.sh
 ```
 
-### Auto Metabase to Trino connection
+### Auto Metabase Setup
 
-This script connects Metabase to the Druid catalog in Trino. First it requests a session ID. Without the id all other requests would be blocked automatically.
-Next, the JSON definition for the connection to Trino is sent. 
+This script setups Metabase after the container has started. 
+It also adds the connection to the Druid data over the Trino catalog. 
 
-Run the `auto_metabase_trino_connection.sh` script from within the `script/` folder.
+Run the `auto_metabase_setup.sh` script.
 
 ```
 sh auto_metabase_trino_connection.sh

@@ -1,13 +1,26 @@
 #!/bin/bash
 
-ENV=${1:-dev}
+SERVER_SIZE=${1:-nano}
+
+ENV=${2:-dev}
 
 export $(grep -v '^#' ./env/${ENV}.properties | xargs)
+export SERVER_SIZE
 
-cp -R ./config_templates/. ./config
+mkdir -p "./config/druid/single-server"
+
+cp -R ./config_templates/kafka/. ./config/kafka
+cp -R ./config_templates/metabase/. ./config/metabase
+cp -R ./config_templates/nginx/. ./config/nginx
+cp -R ./config_templates/trino/. ./config/trino
+cp -R ./config_templates/zookeeper/. ./config/zookeeper
+
+
+cp -R ./config_templates/druid/druid_supervisor_config/. ./config/druid/druid_supervisor_config
+cp -R ./config_templates/druid/single-server/${SERVER_SIZE}/. ./config/druid/single-server/${SERVER_SIZE}
 
 envsubst < docker-compose.yml.template > docker-compose.yml
-envsubst < config_templates/druid/environment > config/druid/environment
+envsubst < config_templates/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties > config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
 envsubst < config_templates/kafka/kafka_jaas.conf > config/kafka/kafka_jaas.conf
 envsubst < config_templates/kafka/server.properties > config/kafka/server.properties
 envsubst < config_templates/kafka/log4j.properties > config/kafka/log4j.properties
@@ -28,7 +41,7 @@ envsubst < config_templates/druid/druid_supervisor_config/subjectentry.json > co
 envsubst < config_templates/druid/druid_supervisor_config/user.json > config/druid/druid_supervisor_config/user.json
 
 envsubst < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
-envsubst '${ODISS_TRINO_USERNAME} ${ODISS_SERVER_NAME} ${ODISS_METABASE_ADMIN_EMAIL} ${ODISS_METABASE_ADMIN_PASSWORD}"}' < scripts/auto_metabase_trino_connection.sh.template > scripts/auto_metabase_trino_connection.sh
+envsubst '${ODISS_SERVER_NAME} ${ODISS_METABASE_ADMIN_EMAIL} ${ODISS_METABASE_ADMIN_FIRST_NAME} ${ODISS_METABASE_ADMIN_LAST_NAME} ${ODISS_METABASE_ADMIN_PASSWORD} ${ODISS_TRINO_USERNAME}"}' < scripts/auto_metabase_setup.sh.template > scripts/auto_metabase_setup.sh
 envsubst '${ODISS_NGINX_KEY_FILE_NAME} ${ODISS_NGINX_CERT_FILE_NAME}' < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
 envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}' < scripts/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
 
