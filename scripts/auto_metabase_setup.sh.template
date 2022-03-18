@@ -1,0 +1,33 @@
+#!/bin/bash
+SETUP_TOKEN=$(
+  curl -k -s -X GET -H "Content-Type: application/json" https://${ODISS_SERVER_NAME}/metabase/api/session/properties | python3 -c 'import sys, json; print(json.load(sys.stdin)["setup-token"])'
+)
+
+curl -k -s -X POST \
+  -H "Content-type: application/json" \
+  https://${ODISS_SERVER_NAME}/metabase/api/setup/ \
+  -d '{
+        "token": "'${SETUP_TOKEN}'",
+        "site_locale": "en_US",
+        "user": {
+          "email": "${ODISS_METABASE_ADMIN_EMAIL}",
+          "first_name": "${ODISS_METABASE_ADMIN_FIRST_NAME}",
+          "last_name": "${ODISS_METABASE_ADMIN_FIRST_NAME}",
+          "password": "${ODISS_METABASE_ADMIN_PASSWORD}"
+        },
+        "prefs": {
+          "site_name": "Metabase",
+          "allow_tracking": "false"
+        },
+        "database": {
+          "engine": "presto-jdbc",
+          "name": "Druid",
+          "details": {
+              "host": "trinocoordinator",
+              "port": "8080",
+              "catalog": "druid",
+              "schema": "druid",
+              "user": "${ODISS_TRINO_USERNAME}"
+          }
+        }
+    }'
