@@ -440,10 +440,10 @@ The **Druid Segments** with the related metadata. The **Druid Segments** are loc
 The Druid metadata is saved in the seperated metadata-storage. In our case Postgres. </br>
 The last data that has to be saved is the **Metabase database** which holds all the data used in Metabase.
 
-To back up all the Data you can use the `backup.sh` script. Just run the script *while the program is running* with the following command.
+To back up all the Data you can use the `backup.sh` script. Just run the script *while the program is running* with the following command. (From source root)
 
 ```
-sh backup.sh
+sh scripts/backup.sh
 ```
 
 This script will create a folder `backup/` in the folder from the script has been executed. </br>
@@ -460,10 +460,11 @@ The requirements for the execution of the script are that the `backup/` folder e
 (`druid_metadata_dump.sql`, `druid_shared.tar` and optional `metabase_data.tar`) that will be created by the backup script.</br>
 The script will also directly start the program. So you do **not** have to run `docker-compose up -d` afterwards. 
 
-To restore a backup just execute the `restore.sh` script with teh following command.
+To restore a backup just execute the `restore.sh` script with teh following command. (From source root)</br>
+If the script does not exist yet then execute the setup script first (`sh setup.sh`).
 
 ```
-sh restore.sh
+sh scripts/restore.sh
 ```
 
 After the program started you should see the restored data in the Druid Console under the datasource section (`https://${ODISS_SERVER_NAME}/unified-console.html#datasources`).
