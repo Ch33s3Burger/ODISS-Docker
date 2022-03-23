@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVER_SIZE=${1:-nano}
+SERVER_SIZE=${1:-micro}
 
 ENV=${2:-dev}
 
@@ -25,7 +25,7 @@ envsubst < config_templates/kafka/kafka_jaas.conf > config/kafka/kafka_jaas.conf
 envsubst < config_templates/kafka/server.properties > config/kafka/server.properties
 envsubst < config_templates/kafka/log4j.properties > config/kafka/log4j.properties
 envsubst < config_templates/nginx/nginx.conf > config/nginx/nginx.conf
-envsubst < config_templates/trino/catalog/mpn.properties > config/trino/catalog/mpn.properties
+envsubst < config_templates/trino/catalog/druid.properties > config/trino/catalog/druid.properties
 envsubst < config_templates/trino/log.properties > config/trino/log.properties
 envsubst < config_templates/zookeeper/zoo.cfg > config/zookeeper/zoo.cfg
 envsubst < config_templates/zookeeper/zookeeper_jaas.conf > config/zookeeper/zookeeper_jaas.conf
@@ -40,6 +40,9 @@ envsubst < config_templates/druid/druid_supervisor_config/subject.json > config/
 envsubst < config_templates/druid/druid_supervisor_config/subjectentry.json > config/druid/druid_supervisor_config/subjectentry.json
 envsubst < config_templates/druid/druid_supervisor_config/user.json > config/druid/druid_supervisor_config/user.json
 
+envsubst < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
+envsubst < scripts/backup.sh.template > scripts/backup.sh
+envsubst < scripts/restore.sh.template > scripts/restore.sh
 envsubst < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
 envsubst '${ODISS_SERVER_NAME} ${ODISS_METABASE_ADMIN_EMAIL} ${ODISS_METABASE_ADMIN_FIRST_NAME} ${ODISS_METABASE_ADMIN_LAST_NAME} ${ODISS_METABASE_ADMIN_PASSWORD} ${ODISS_TRINO_USERNAME}"}' < scripts/auto_metabase_setup.sh.template > scripts/auto_metabase_setup.sh
 envsubst '${ODISS_NGINX_KEY_FILE_NAME} ${ODISS_NGINX_CERT_FILE_NAME}' < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
