@@ -51,7 +51,7 @@ For more detail regarding the Single Server deployment of Druid take a look at
 their [documentation](https://druid.apache.org/docs/latest/operations/single-server.html).
 
 <a name="system_requirements_single_server"></a>
-#### System requirements for each configuration
+#### System requirements for each configuration Druid configuration
 
 * Nano: 1 CPU, 4GiB RAM
 * Micro: 4 CPU, 16GiB RAM
@@ -59,6 +59,10 @@ their [documentation](https://druid.apache.org/docs/latest/operations/single-ser
 * Medium: 16 CPU, 128GiB RAM (~i3.4xlarge)
 * Large: 32 CPU, 256GiB RAM (~i3.8xlarge)
 * X-Large: 64 CPU, 512GiB RAM (~i3.16xlarge)
+
+Since there is also Apache Metabase, Apache Kafka and Trino you have to add up to 3GiB RAM. </br>
+Depending on your size it is recommended to add multiple Trino worker for faster Querying from Apache Metabase. 
+If your data ingestion is also increasing you can also add multiple Apache Kafka applications.
 
 <a name="architecture"></a>
 ## Architecture
@@ -254,9 +258,7 @@ the [Configuration](#config).
   "bootstrap.servers": "kafka:9092",
   "security.protocol": "SASL_PLAINTEXT",
   "sasl.mechanism": "PLAIN",
-  "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required \
-      username='$ODISS_KAFKA_KAFKASERVER_USERNAME' \
-      password='$ODISS_KAFKA_KAFKASERVER_PASSWORD';"
+  "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='$ODISS_KAFKA_KAFKASERVER_USERNAME' password='$ODISS_KAFKA_KAFKASERVER_PASSWORD';"
 }
 ```
 
@@ -433,12 +435,64 @@ Both files can be genereated for testing with the [Nginx Certificate generator](
 <a name="backups"></a>
 ## Backups
 
-Since all applications run as Docker containers a backup can be done by following
-the [official docker guidelines](https://docs.docker.com/desktop/backup-and-restore/). Overall only Metabase and Druid
-contain valuable data. Druid holds the data in seven different volumes. Each container has its own volume. The metadata
-is saved in postgres in the "metadata_data" volume. And the data is saved in the "druid_shared" volume. The remaining
-volumes contain more temporary metadata. </br>
-Metabase uses a local database which is located in the "metabase_data" volume. </br>
-In conclusion for backing up this project you should save all volumes as images. And for restoring it you just have to
-reload those images like described in
-the [official docker guidelines](https://docs.docker.com/desktop/backup-and-restore/).
+There are only three data locations that need to be backed up.</br>
+The **Druid Segments** with the related metadata. The **Druid Segments** are located in the "druid_shared" volume which is mounted to `/opt/shared`.
+The Druid metadata is saved in the seperated metadata-storage. In our case Postgres. </br>
+The last data that has to be saved is the **Metabase database** which holds all the data used in Metabase.
+
+To back up all the Data you can use the `backup.sh` script. Just run the script *while the program is running* with the following command.
+
+```
+sh backup.sh
+```
+
+This script will create a folder `backup/` in the folder from the script has been executed. </br>
+It will output three files. The `druid_metadata_dump.sql` which holds a Postgres dump of the Druid metadata.
+A `druid_shared.tar` file which holds the zipped Druid segments (the data). And a `metabase_data.tar` which hold the metabase data.
+
+## Restoring a Backup
+
+As there are three location to back up there are also three to restore. 
+But if you prefer you can leave out the Metabase database. This gives you the opportunity to reset your Metabase.
+If you leave out one of the other parts the restoring will not be successful. </br>
+
+The requirements for the execution of the script are that the `backup/` folder exists with the 2-3 files 
+(`druid_metadata_dump.sql`, `druid_shared.tar` and optional `metabase_data.tar`) that will be created by the backup script.</br>
+The script will also directly start the program. So you do **not** have to run `docker-compose up -d` afterwards. 
+
+To restore a backup just execute the `restore.sh` script with teh following command.
+
+```
+sh restore.sh
+```
+
+After the program started you should see the restored data in the Druid Console under the datasource section (`https://${ODISS_SERVER_NAME}/unified-console.html#datasources`).
+If the data has not been imported correctly you should see the datasource from your backup with full availability.</br>
+
+### Problems
+
+If the datasource's are **not** shown in your Druid console there are two possible problems.
+In both problems the metadata has not been restored successfully. You can check if the data restoring was successful by checking the `/opt/shared` folder in the "historical" container.
+You can access to container with the following command:
+
+```
+docker exec -it historical /bin/sh
+```
+
+This opens a console inside the "historical" docker container. Now you read the content of the `/opt/shared` folder with the following command:
+
+```
+ls -h /opt/shared
+```
+
+If the result looks like the following the data import was successful then you only have to check the metadata.
+
+```
+indexing-logs segments
+```
+
+If the datasource's are shown in your Druid console, but they are not fully available then your data (segment) import failed. 
+The metadata indicates that there had been datasource's, but they can not find them in the defined location of the metadata.
+If you can not restore the data from a backup you can just reingest the data with Kafka. If the data is *similar* to the old data it will be fully available again.</br>
+Careful the metadata only the meta information about the segment not about the data inside. 
+Therefore, only information like the segment ID is compared which holds the Kafka Stream topic and the time span of the data.
