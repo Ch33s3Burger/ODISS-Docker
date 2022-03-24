@@ -14,6 +14,7 @@ cp -R ./config_templates/metabase/. ./config/metabase
 cp -R ./config_templates/nginx/. ./config/nginx
 cp -R ./config_templates/trino/. ./config/trino
 cp -R ./config_templates/zookeeper/. ./config/zookeeper
+cp -R ./config_templates/postgres/. ./config/postgres
 
 
 cp -R ./config_templates/druid/druid_supervisor_config/. ./config/druid/druid_supervisor_config

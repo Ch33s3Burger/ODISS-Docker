@@ -55,12 +55,16 @@ services:
       - "3000"
     container_name: "metabase"
     volumes:
-      - metabase_data:/tmp
-      - ./config/metabase/log4j2.xml:/tmp/log4j2.xml
+      - ./config/metabase/log4j2.xml:/log4j2.xml
     environment:
-      - MB_DB_FILE=/tmp/metabase.db
+      - MB_DB_TYPE=postgres
+      - MB_DB_DBNAME=metabase
+      - MB_DB_PORT=5432
+      - MB_DB_USER=${ODISS_POSTGRES_USER}
+      - MB_DB_PASS=${ODISS_POSTGRES_PASSWORD}
+      - MB_DB_HOST=postgres
       - MB_EMOJI_IN_LOGS=false
-      - JAVA_OPTS=-Dlog4j.configurationFile=file:///tmp/log4j2.xml
+      - JAVA_OPTS=-Dlog4j.configurationFile=file:///log4j2.xml
     depends_on:
       - trinocoordinator
 
@@ -70,10 +74,11 @@ services:
     image: postgres:latest
     volumes:
       - metadata_data:/var/lib/postgresql/data
+      - ./config/postgres/create-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/create-multiple-postgresql-databases.sh
     environment:
-      - POSTGRES_PASSWORD=${ODISS_POSTGRES_PASSWORD}
       - POSTGRES_USER=${ODISS_POSTGRES_USER}
-      - POSTGRES_DB=druid
+      - POSTGRES_PASSWORD=${ODISS_POSTGRES_PASSWORD}
+      - POSTGRES_MULTIPLE_DATABASES=druid,metabase
 
   zookeeper:
     container_name: zookeeper
