@@ -3,6 +3,7 @@ docker-compose up -d postgres
 /bin/sleep 3
 
 docker exec -i postgres /bin/bash -c "PGPASSWORD=${ODISS_POSTGRES_PASSWORD} psql --username ${ODISS_POSTGRES_USER} druid" < ./backup/druid_metadata_dump.sql
+docker exec -i postgres /bin/bash -c "PGPASSWORD=${ODISS_POSTGRES_PASSWORD} psql --username ${ODISS_POSTGRES_USER} metabase" < ./backup/metabase_dump.sql
 docker-compose up -d
 
 /bin/sleep 10
