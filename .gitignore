@@ -9,3 +9,5 @@ scripts/auto_kafka_ingestion.sh
 *~
 /backup/
 /.idea/
+/scripts/backup.sh
+/scripts/restore.sh
