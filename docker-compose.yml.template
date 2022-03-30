@@ -57,6 +57,7 @@ services:
     volumes:
       - ./config/metabase/log4j2.xml:/log4j2.xml
     environment:
+      - MB_SITE_URL=https://${ODISS_SERVER_NAME}/metabase
       - MB_DB_TYPE=postgres
       - MB_DB_DBNAME=metabase
       - MB_DB_PORT=5432
