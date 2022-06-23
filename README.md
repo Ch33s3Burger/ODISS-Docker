@@ -67,9 +67,24 @@ If your data ingestion is also increasing you can also add multiple Apache Kafka
 <a name="architecture"></a>
 ## Architecture
 
-The default Kafka setup for this project has two different listeners. One is for internal communication which is **not**
+The architecture is seperated into 3 parts. The ingestion, the Data Warehouse and the Querying part. 
+The following graphic shows the default Single-Server setup.
 
-Doc still in progress!!!
+![Architecture](instruction_material/architecture.png)
+
+
+
+### Data Ingestion (Apache Kafka)
+
+
+
+### Data Warehouse (Apache Druid)
+
+
+
+### Data Querying (Apache Metabase, Trino)
+
+
 
 <a name="installation"></a>
 ## Installation
@@ -447,8 +462,8 @@ sh scripts/backup.sh
 ```
 
 This script will create a folder `backup/` in the folder from the script has been executed. </br>
-It will output three files. The `druid_metadata_dump.sql` which holds a Postgres dump of the Druid metadata.
-A `druid_shared.tar` file which holds the zipped Druid segments (the data). And a `metabase_data.tar` which hold the metabase data.
+It will output three files. The `druid_metadata_dump.sql` and `metabase_dump.sql` which holds a Postgres dump of the Druid metadata and Metabase data.
+A `druid_shared.tar` file which holds the zipped Druid segments (the data).
 
 ## Restoring a Backup
 
@@ -457,10 +472,11 @@ But if you prefer you can leave out the Metabase database. This gives you the op
 If you leave out one of the other parts the restoring will not be successful. </br>
 
 The requirements for the execution of the script are that the `backup/` folder exists with the 2-3 files 
-(`druid_metadata_dump.sql`, `druid_shared.tar` and optional `metabase_data.tar`) that will be created by the backup script.</br>
+(`druid_metadata_dump.sql`, `druid_shared.tar` and optional `metabase_dump.sql`) that will be created by the backup script.</br>
 The script will also directly start the program. So you do **not** have to run `docker-compose up -d` afterwards. 
+If you restored your system without the Metabase data you should execute the ["Auto Metabase Setup"](./scripts/SCIPTS.md#auto-metabase-setup) script afterwards.
 
-To restore a backup just execute the `restore.sh` script with teh following command. (From source root)</br>
+To restore a backup just execute the `restore.sh` script with the following command. (From source root)</br>
 If the script does not exist yet then execute the setup script first (`sh setup.sh`).
 
 ```
