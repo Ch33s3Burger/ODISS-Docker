@@ -67,9 +67,7 @@ If your data ingestion is also increasing you can also add multiple Apache Kafka
 <a name="architecture"></a>
 ## Architecture
 
-The default Kafka setup for this project has two different listeners. One is for internal communication which is **not**
-
-Doc still in progress!!!
+![Architecture](instruction_material/Architecture.svg)
 
 <a name="installation"></a>
 ## Installation
