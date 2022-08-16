@@ -32,7 +32,14 @@ envsubst < config_templates/zookeeper/zoo.cfg > config/zookeeper/zoo.cfg
 envsubst < config_templates/zookeeper/zookeeper_jaas.conf > config/zookeeper/zookeeper_jaas.conf
 envsubst < config_templates/metabase/log4j2.xml > config/metabase/log4j2.xml
 
-envsubst < config_templates/druid/druid_supervisor_config/user_example.json > config/druid/druid_supervisor_config/user_example.json
+envsubst < config_templates/druid/druid_supervisor_config/form.json > config/druid/druid_supervisor_config/form.json
+envsubst < config_templates/druid/druid_supervisor_config/item.json > config/druid/druid_supervisor_config/item.json
+envsubst < config_templates/druid/druid_supervisor_config/itemgroup.json > config/druid/druid_supervisor_config/itemgroup.json
+envsubst < config_templates/druid/druid_supervisor_config/study.json > config/druid/druid_supervisor_config/study.json
+envsubst < config_templates/druid/druid_supervisor_config/studyevent.json > config/druid/druid_supervisor_config/studyevent.json
+envsubst < config_templates/druid/druid_supervisor_config/subject.json > config/druid/druid_supervisor_config/subject.json
+envsubst < config_templates/druid/druid_supervisor_config/subjectentry.json > config/druid/druid_supervisor_config/subjectentry.json
+envsubst < config_templates/druid/druid_supervisor_config/user.json > config/druid/druid_supervisor_config/user.json
 
 envsubst '${ODISS_DRUID_ADMIN_PASSWORD} ${ODISS_SERVER_NAME}' < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
 envsubst < scripts/backup.sh.template > scripts/backup.sh
