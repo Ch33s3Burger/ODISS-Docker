@@ -77,5 +77,5 @@ It also adds the connection to the Druid data over the Trino catalog.
 Run the `auto_metabase_setup.sh` script.
 
 ```
-sh auto_metabase_trino_connection.sh
+sh auto_metabase_setup.sh
 ```
