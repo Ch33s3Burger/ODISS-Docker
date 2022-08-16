@@ -1,0 +1,47 @@
+{
+  "type": "kafka",
+  "spec": {
+    "ioConfig": {
+      "type": "kafka",
+      "consumerProperties": {
+        "bootstrap.servers": "kafka:9092",
+        "security.protocol": "SASL_PLAINTEXT",
+        "sasl.mechanism": "PLAIN",
+        "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='${ODISS_KAFKA_KAFKASERVER_USERNAME}' password='${ODISS_KAFKA_KAFKASERVER_PASSWORD}';"
+      },
+      "topic": "subject",
+      "inputFormat": {
+        "type": "json"
+      },
+      "useEarliestOffset": true,
+      "taskDuration": "PT30M",
+      "completionTimeout": "PT30M"
+    },
+    "tuningConfig": {
+      "type": "kafka"
+    },
+    "dataSchema": {
+      "dataSource": "subject",
+      "timestampSpec": {
+        "column": "SubjectCreatedDate",
+        "format": "iso"
+      },
+      "dimensionsSpec": {
+        "dimensions": [
+          "Status",
+          "SubjectKey",
+          "UniqueIdentifier",
+          "YearOfBirth",
+          "Sex",
+          "UserOIDCreatedSubject",
+          "StudySubjectID"
+        ]
+      },
+      "granularitySpec": {
+        "queryGranularity": "none",
+        "rollup": false,
+        "segmentGranularity": "day"
+      }
+    }
+  }
+}

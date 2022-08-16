@@ -9,7 +9,7 @@
         "sasl.mechanism": "PLAIN",
         "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='${ODISS_KAFKA_KAFKASERVER_USERNAME}' password='${ODISS_KAFKA_KAFKASERVER_PASSWORD}';"
       },
-      "topic": "user",
+      "topic": "item",
       "inputFormat": {
         "type": "json"
       },
@@ -21,18 +21,30 @@
       "type": "kafka"
     },
     "dataSchema": {
-      "dataSource": "user",
+      "dataSource": "item",
       "timestampSpec": {
         "column": "!!!_no_such_column_!!!",
         "missingValue": "2010-01-01T00:00:00Z"
       },
       "dimensionsSpec": {
         "dimensions": [
-          "Organization",
-          "FirstName",
-          "FullName",
-          "LastName",
-          "UserOID"
+          {
+            "type": "long",
+            "name": "SignificantDigits"
+          },
+          "Comment",
+          "LeftItemText",
+          "SASFieldName",
+          {
+            "type": "long",
+            "name": "Length"
+          },
+          "MeasurementUnitText",
+          "DataType",
+          "MeasurementUnitName",
+          "ItemOID",
+          "Name",
+          "MeasurementUnitOID"
         ]
       },
       "granularitySpec": {
