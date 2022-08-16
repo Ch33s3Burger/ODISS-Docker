@@ -9,7 +9,7 @@
         "sasl.mechanism": "PLAIN",
         "sasl.jaas.config": "org.apache.kafka.common.security.plain.PlainLoginModule required username='${ODISS_KAFKA_KAFKASERVER_USERNAME}' password='${ODISS_KAFKA_KAFKASERVER_PASSWORD}';"
       },
-      "topic": "subject",
+      "topic": "user",
       "inputFormat": {
         "type": "json"
       },
@@ -21,29 +21,24 @@
       "type": "kafka"
     },
     "dataSchema": {
-      "dataSource": "subject",
+      "dataSource": "user",
       "timestampSpec": {
-        "column": "subjectCreatedDate",
-        "format": "iso"
+        "column": "!!!_no_such_column_!!!",
+        "missingValue": "2010-01-01T00:00:00Z"
       },
       "dimensionsSpec": {
         "dimensions": [
-          "userCreatedSubject",
-          "studySubjectID",
-          "sex",
-          "subjectKey",
-          {
-            "type": "long",
-            "name": "uniqueIdentifier"
-          },
-          "status",
-          "yearOfBirth"
+          "Organization",
+          "FirstName",
+          "FullName",
+          "LastName",
+          "UserOID"
         ]
       },
       "granularitySpec": {
         "queryGranularity": "none",
         "rollup": false,
-        "segmentGranularity": "day"
+        "segmentGranularity": "all"
       }
     }
   }
