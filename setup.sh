@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVER_SIZE=${1:-micro}
+SERVER_SIZE=${1:-nano}
 
 ENV=${2:-dev}
 

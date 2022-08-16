@@ -20,7 +20,7 @@ git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
    Possible options are: nano, micro, small, medium, large, xlarge
 
 ```
-sh setup.sh micro
+sh setup.sh nano
 ```
 
 4. [Add](./CERTS.md) or [Create](./SCIPTS.md#self-signed-certificate-creation) the Kafka and Nginx Certificates.

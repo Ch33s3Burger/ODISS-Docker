@@ -15,10 +15,10 @@ It reads the configurations from the `./env/___.properties` (default: dev.proper
 On the one hand the script creates the `./config` folder based on the `./config_templates` folder. But it replaces all variables with the definitions from the configuration file.
 On the other hand it also adjusts the scripts that are listed below.
 
-Run the `setup.sh` script from the project source folder. The default configuration is **dev**.
+Run the `setup.sh` script from the project source folder. The default configuration is **nano (Size)** and **dev (Config)**.
 
 ```
-sh setup.sh dev
+sh setup.sh nano dev
 ```
 
 To use another config replace the first input parameter with the file name.
