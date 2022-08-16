@@ -32,3 +32,7 @@ docker-compose up -d
 ```
 
 6. Setup Metabase. Run the ["Auto Metabase Setup"](./SCIPTS.md#auto-metabase-setup) script.
+
+7. (Optional) Add Kafka ingestion in Druid. Run the ["Auto Kafka Ingestion"](./SCIPTS.md#auto-kafka-ingestion)
+   script to make Druid listen to the Kafka topics. This will automatically import new Data that has been added to the
+   Kafka Streams.
