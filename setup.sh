@@ -45,8 +45,63 @@ envsubst '${ODISS_DRUID_ADMIN_PASSWORD} ${ODISS_SERVER_NAME}' < scripts/auto_kaf
 envsubst < scripts/backup.sh.template > scripts/backup.sh
 envsubst < scripts/restore.sh.template > scripts/restore.sh
 envsubst '${ODISS_SERVER_NAME} ${ODISS_METABASE_ADMIN_EMAIL} ${ODISS_METABASE_ADMIN_FIRST_NAME} ${ODISS_METABASE_ADMIN_LAST_NAME} ${ODISS_METABASE_ADMIN_PASSWORD} ${ODISS_TRINO_USERNAME}"}' < scripts/auto_metabase_setup.sh.template > scripts/auto_metabase_setup.sh
-envsubst '${ODISS_NGINX_KEY_FILE_NAME} ${ODISS_NGINX_CERT_FILE_NAME}' < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
-envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}' < scripts/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
+envsubst '${ODISS_NGINX_KEY_FILE_NAME} ${ODISS_NGINX_CERT_FILE_NAME} ${ODISS_SERVER_NAME}' < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
+envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}, ${ODISS_SERVER_NAME} ${ODISS_KAFKA_TRUSTSTORE_PASSWORD}' < scripts/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
 
 touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}
+
+echo "Would you like to generate the Kafka and Nginx production (test) certs? [y/N]"
+read generate_certs
+if [ "$generate_certs" == "y" ]; then
+  bash scripts/kafka_cert_generator.sh -f
+  bash scripts/nginx_cert_generator.sh -f
+  echo
+  echo "The Kafka and Nginx production (test) certs have been created"
+fi
+
+kafka_keystore_location="./config/kafka/certs/"${ODISS_KAFKA_KEYSTORE_FILE_NAME}
+kafka_truststore_location="./config/kafka/certs/"${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}
+
+if [ -e "$kafka_keystore_location" ] && [ -e "$kafka_truststore_location" ]; then
+  if [ "$generate_certs" != "y" ]; then
+    echo "The Kafka keystore and truststore already exist."
+  fi
+  kafka_certs_exist="True"
+else
+  echo "Add or generate the Kafka keystore and truststore."
+fi
+
+nginx_cert_location="./config/nginx/certs/"${ODISS_NGINX_CERT_FILE_NAME}
+nginx_key_location="./config/nginx/certs/"${ODISS_NGINX_KEY_FILE_NAME}
+
+if [ -e "$nginx_cert_location" ] && [ -e "$nginx_key_location" ]; then
+  if [ "$generate_certs" != "y" ]; then
+    echo "The Nginx cert and key file already exist."
+  fi
+  nginx_certs_exist="True"
+else
+  echo "Add or generate the Nginx cert and key file."
+fi
+
+if [ "$kafka_certs_exist" == "True" ] && [ "$nginx_certs_exist" == "True" ]; then
+  docker-compose up -d
+
+  echo "Waiting until everything has started (1m)"
+  sleep 1m
+  bash scripts/auto_metabase_setup.sh
+
+  echo
+  echo "Would you like to automatically add the ingestion config, which configures the ingestion from Kafka to Druid.[y/N]"
+  read generate_kafka_druid_ingestion
+  if [ "$generate_kafka_druid_ingestion" == "y" ]; then
+    bash scripts/auto_kafka_ingestion.sh
+    echo
+    echo "The ingestions have been configured."
+  fi
+fi
+
+echo "ODISS Started!"
+echo "You can reach Apache Druid under https://${ODISS_SERVER_NAME}."
+echo "You can reach Apache Metabase under https://${ODISS_SERVER_NAME}/metabase."
+echo "You can reach Trino under https://${ODISS_SERVER_NAME}/ui."
