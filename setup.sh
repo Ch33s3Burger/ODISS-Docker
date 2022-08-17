@@ -58,6 +58,9 @@ if [ "$generate_certs" == "y" ]; then
   bash scripts/nginx_cert_generator.sh -f
   echo
   echo "The Kafka and Nginx production (test) certs have been created"
+else
+  mkdir ./config/kafka/certs/
+  mkdir ./config/nginx/certs/
 fi
 
 kafka_keystore_location="./config/kafka/certs/"${ODISS_KAFKA_KEYSTORE_FILE_NAME}
@@ -99,9 +102,13 @@ if [ "$kafka_certs_exist" == "True" ] && [ "$nginx_certs_exist" == "True" ]; the
     echo
     echo "The ingestions have been configured."
   fi
-fi
 
-echo "ODISS Started!"
-echo "You can reach Apache Druid under https://${ODISS_SERVER_NAME}."
-echo "You can reach Apache Metabase under https://${ODISS_SERVER_NAME}/metabase."
-echo "You can reach Trino under https://${ODISS_SERVER_NAME}/ui."
+  echo "ODISS Started!"
+  echo "You can reach Apache Druid under https://${ODISS_SERVER_NAME}."
+  echo "You can reach Apache Metabase under https://${ODISS_SERVER_NAME}/metabase."
+  echo "You can reach Trino under https://${ODISS_SERVER_NAME}/ui."
+else
+  echo "The certs are missing or they have not been configured correctly."
+  echo -n "If you would like to add the certs manually. Just follow the instructions for adding the certs and restart the script. "
+  echo "The config folder is already created."
+fi
