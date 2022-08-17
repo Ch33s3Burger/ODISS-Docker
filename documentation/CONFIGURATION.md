@@ -1,5 +1,10 @@
 # Configuration
 
+The following table explains the configuration options that can be adjusted in the needed environment file.
+By default, a [dev.properties](../env/dev.properties) file is provided as an example. If you would like to
+configure multiple environment files just copy the [dev.properties](../env/dev.properties) file and rename it.
+If you would like to use the other environment file, adjust the `-e` option when running the [setup.sh script](./INSTALLATION.md). 
+
 | Name                                  | Description                                                                                                           |
 |:--------------------------------------|:----------------------------------------------------------------------------------------------------------------------|
 | ODISS_SERVER_NAME                     | The Server name (ex: example.com). Should be the same as used in your Certificates.                                   |

@@ -13,10 +13,10 @@ the Apache Druid applications to fit the system size.
 git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
 ```
 
-2. Edit the config under `env/dev.properties` (For details on the variables take a look at
+2. Edit the config under [env/dev.properties](../env/dev.properties) (For details on the variables take a look at
    the [configuration settings](./CONFIGURATION.md))
 
-3. Run the `setup.sh` script. </br>
+3. Run the `setup.sh` script. It will also start the docker-compose.</br>
    
    * `-s SERVER_SIZE` OPTIONS: nano (default), micro, small, medium, large, xlarge </br>
    * `-e ENVIRONMENT_FILE` Configuration File in folder `env/` default: `dev.properties`
@@ -37,8 +37,11 @@ git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
       
       2. Add the certs manually. The location and configurations you have to adjust are described [here](./CERTS.md).
 
-      3. Rerun the `setup.sh` script.
+      3. Rerun the `setup.sh` script. If you adjusted the [configuration settings](./CONFIGURATION.md) in between it will automatically update.
 
       ```
       bash setup.sh -c
       ```
+   
+4. ODISS is now successfully set up. The Apache Druid, Apache Metabase and Trino links are printed out at the end of the `setup.sh` script.
+   Now you can [get started](./GETTING_STARTED_ADMIN.md) with ODISS.

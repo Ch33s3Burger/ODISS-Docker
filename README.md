@@ -10,12 +10,11 @@ For development, there are also scripts available for the automatic creation of 
 
 # Table of contents
 
+* [Installation](./documentation/INSTALLATION.md)
+* [Configuration](./documentation/CONFIGURATION.md)
+* [Getting Started](./documentation/GETTING_STARTED_ADMIN.md)
 * [Requirements](./documentation/REQUIREMENTS.md)
 * [Architecture](./documentation/ARCHITECTURE.md)
-* [Installation](./documentation/INSTALLATION.md)
-* [Getting Started](./documentation/GETTING_STARTED.md)
-* [Configuration](./documentation/CONFIGURATION.md)
 * [Certificates](./documentation/CERTS.md)
-* [Scripts](./documentation/SCIPTS.md)
 * [Backups](./documentation/BACKUP_RESTORING.md)
 

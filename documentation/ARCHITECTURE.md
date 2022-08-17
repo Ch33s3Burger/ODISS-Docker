@@ -53,8 +53,8 @@ optionally proxied Master server requests as well).
 
 Within a Query server, functionality is split between two processes, the
 Broker and Router.
-The Router can be accessed over a [web browser](./GETTING_STARTED.md#apache-druid-console).
-The Broker can be [accessed over different clients directly](./GETTING_STARTED.md#how-to-access-the-data-from-external-clients) to load data.
+The Router can be accessed over a [web browser](./GETTING_STARTED_ADMIN.md#apache-druid-console).
+The Broker can be [accessed over different clients directly](./GETTING_STARTED_ADMIN.md#how-to-access-the-data-from-external-clients) to load data.
 
 ## Apache Kafka (Data Ingestion)
 
@@ -68,10 +68,10 @@ provides two listeners for accessing data pipelines.
 1. The external listener is used by external client to ingest data into
    ODISS-Docker. The authentication is based on a certificate and a basic
    authentication. There are many [clients](https://cwiki.apache.org/confluence/display/KAFKA/Clients)
-   that can be used for [ingesting data](./GETTING_STARTED.md#load-data-into-kafka).
+   that can be used for [ingesting data](./GETTING_STARTED_ADMIN.md#load-data-into-kafka).
 
 2. The internal listener is used by Apache Druid to [ingest the data into the
-   Data Warehouse](./GETTING_STARTED.md#load-data-from-kafka-into-druid). The internal
+   Data Warehouse](./GETTING_STARTED_ADMIN.md#load-data-from-kafka-into-druid). The internal
    authentication is only based on basic auth but is only accessible from
    defined docker network.
 
