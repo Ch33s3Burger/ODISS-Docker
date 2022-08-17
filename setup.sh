@@ -1,10 +1,25 @@
 #!/bin/bash
 
-SERVER_SIZE=${1:-nano}
+skip_cert_creation='False'
+SERVER_SIZE='nano'
+ENV='dev.properties'
 
-ENV=${2:-dev}
+while getopts 's:e:c' opt; do
+  case $opt in
+    c )
+      skip_cert_creation='True';;
+    s )
+      SERVER_SIZE=$OPTARG;;
+    e )
+      ENV=$OPTARG;;
+    ? )
+      echo "script usage: $(basename \$0) [-s SERVER_SIZE] [-e ENVIRONMENT_FILE_NAME] [-c]" >&2
+      exit 1
+      ;;
+  esac
+done
 
-export $(grep -v '^#' ./env/${ENV}.properties | xargs)
+export $(grep -v '^#' ./env/${ENV} | xargs)
 export SERVER_SIZE
 
 mkdir -p "./config/druid/single-server"
@@ -51,16 +66,21 @@ envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME},
 touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}
 
-echo "Would you like to generate the Kafka and Nginx production (test) certs? [y/N]"
-read generate_certs
+if [ "$skip_cert_creation" == 'False' ]; then
+  echo "Would you like to generate the Kafka and Nginx production (test) certs? [y/N]"
+  read generate_certs
+else
+  generate_certs="n"
+fi
+
 if [ "$generate_certs" == "y" ]; then
   bash scripts/kafka_cert_generator.sh -f
   bash scripts/nginx_cert_generator.sh -f
   echo
   echo "The Kafka and Nginx production (test) certs have been created"
 else
-  mkdir ./config/kafka/certs/
-  mkdir ./config/nginx/certs/
+  mkdir -p ./config/kafka/certs/
+  mkdir -p ./config/nginx/certs/
 fi
 
 kafka_keystore_location="./config/kafka/certs/"${ODISS_KAFKA_KEYSTORE_FILE_NAME}
@@ -110,5 +130,5 @@ if [ "$kafka_certs_exist" == "True" ] && [ "$nginx_certs_exist" == "True" ]; the
 else
   echo "The certs are missing or they have not been configured correctly."
   echo -n "If you would like to add the certs manually. Just follow the instructions for adding the certs and restart the script. "
-  echo "The config folder is already created."
+  echo "The ./config folder is already created."
 fi
