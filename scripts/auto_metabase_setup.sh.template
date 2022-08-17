@@ -16,7 +16,7 @@ else
           "user": {
             "email": "${ODISS_METABASE_ADMIN_EMAIL}",
             "first_name": "${ODISS_METABASE_ADMIN_FIRST_NAME}",
-            "last_name": "${ODISS_METABASE_ADMIN_FIRST_NAME}",
+            "last_name": "${ODISS_METABASE_ADMIN_LAST_NAME}",
             "password": "${ODISS_METABASE_ADMIN_PASSWORD}"
           },
           "prefs": {
