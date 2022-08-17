@@ -2,10 +2,11 @@
 
 set -e
 
-SEARCH_DIR=../config/druid/druid_supervisor_config/
+SEARCH_DIR=./config/druid/druid_supervisor_config/
 
 for FILE in "$SEARCH_DIR"*
 do
+  echo
 	echo "Sending kafka ingestion file: $FILE"
 	curl -u admin:${ODISS_DRUID_ADMIN_PASSWORD} -k -XPOST -H'Content-Type: application/json' -d @$FILE https://${ODISS_SERVER_NAME}/coordinator/druid/indexer/v1/supervisor
 done
