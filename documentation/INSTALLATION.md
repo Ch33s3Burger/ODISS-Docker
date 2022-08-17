@@ -16,23 +16,29 @@ git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
 2. Edit the config under `env/dev.properties` (For details on the variables take a look at
    the [configuration settings](./CONFIGURATION.md))
 
-3. Run the `setup.sh` script. With your chosen server size. </br>
-   Possible options are: nano, micro, small, medium, large, xlarge
+3. Run the `setup.sh` script. </br>
+   
+   * `-s SERVER_SIZE` OPTIONS: nano (default), micro, small, medium, large, xlarge </br>
+   * `-e ENVIRONMENT_FILE` Configuration File in folder `env/` default: `dev.properties`
 
-```
-sh setup.sh nano
-```
+   a. Generate test certificates with the setup script.
 
-4. [Add](./CERTS.md) or [Create](./SCIPTS.md#self-signed-certificate-creation) the Kafka and Nginx Certificates.
+   ```
+   bash setup.sh
+   ```
 
-5. Start the docker containers. (Execute in source folder)
+   b. Add your own certificates.
 
-```
-docker-compose up -d
-```
+      1. Run the `setup.sh` script.
 
-6. Setup Metabase. Run the ["Auto Metabase Setup"](./SCIPTS.md#auto-metabase-setup) script.
+      ```
+      bash setup.sh -c
+      ```
+      
+      2. Add the certs manually. The location and configurations you have to adjust are described [here](./CERTS.md).
 
-7. (Optional) Add Kafka ingestion in Druid. Run the ["Auto Kafka Ingestion"](./SCIPTS.md#auto-kafka-ingestion)
-   script to make Druid listen to the Kafka topics. This will automatically import new Data that has been added to the
-   Kafka Streams.
+      3. Rerun the `setup.sh` script.
+
+      ```
+      bash setup.sh -c
+      ```
