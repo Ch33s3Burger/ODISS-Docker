@@ -37,6 +37,8 @@ cp -R ./config_templates/druid/single-server/${SERVER_SIZE}/. ./config/druid/sin
 
 envsubst < docker-compose.yml.template > docker-compose.yml
 envsubst < config_templates/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties > config/druid/single-server/${SERVER_SIZE}/_common/common.runtime.properties
+envsubst < config_templates/druid/consumer_properties.txt.template > config/druid/consumer_properties.txt
+envsubst < config_templates/kafka/kafka.client.properties.template > config/kafka/kafka.client.properties
 envsubst < config_templates/kafka/kafka_jaas.conf > config/kafka/kafka_jaas.conf
 envsubst < config_templates/kafka/server.properties > config/kafka/server.properties
 envsubst < config_templates/kafka/log4j.properties > config/kafka/log4j.properties
@@ -125,8 +127,8 @@ if [ "$kafka_certs_exist" == "True" ] && [ "$nginx_certs_exist" == "True" ]; the
 
   echo "ODISS Started!"
   echo "You can reach Apache Druid under https://${ODISS_SERVER_NAME}."
-  echo "You can reach Apache Metabase under https://${ODISS_SERVER_NAME}/metabase."
-  echo "You can reach Trino under https://${ODISS_SERVER_NAME}/ui."
+  echo "You can reach Apache Metabase under https://${ODISS_SERVER_NAME}/metabase/."
+  echo "You can reach Trino under https://${ODISS_SERVER_NAME}/trino/."
 else
   echo "The certs are missing or they have not been configured correctly."
   echo -n "If you would like to add the certs manually. Just follow the instructions for adding the certs and restart the script. "

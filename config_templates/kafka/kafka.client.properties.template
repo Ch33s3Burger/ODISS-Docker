@@ -1,0 +1,40 @@
+# Standard Kafka config to connect to a Kafka server as a Client
+# Authentication is over SSL_SASL
+# The encryption is over TLSv1.2
+
+# The Kafka connection URL
+bootstrap.servers=${ODISS_SERVER_NAME}:9093
+
+###############
+# SASL config #
+###############
+
+sasl.mechanism=PLAIN
+security.protocol=SASL_SSL
+ssl.protocol=TLSv1.2
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+   serviceName="kafka" \
+   username="${ODISS_KAFKA_KAFKASERVER_USERNAME}" \
+   password="${ODISS_KAFKA_KAFKASERVER_PASSWORD}";
+
+
+##############
+# SSL config #
+##############
+
+ssl.truststore.location=path/to/kafka/truststore/location/${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}
+ssl.truststore.password=kafka_truststore_password
+
+# If you are using a self signed certificate you have to add these config so that Kafka does not validate the certificate
+enable.ssl.certificate.verification=false
+ssl.endpoint.identification.algorithm=
+
+
+##############################
+# Kafka Stream design config #
+##############################
+
+default.key.serde=org.apache.kafka.common.serialization.Serdes$StringSerde
+default.value.serde=org.apache.kafka.common.serialization.Serdes$StringSerde
+value.serializer=org.apache.kafka.common.serialization.StringSerializer
+key.serializer=org.apache.kafka.common.serialization.IntegerSerializer
