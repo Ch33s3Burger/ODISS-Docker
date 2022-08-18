@@ -17,8 +17,8 @@ If you would like to use the other environment file, adjust the `-e` option when
 | ODISS_DRUID_ZOOKEEPER_SERVER_PASSWORD | The Zookeeper auth password for the Druid connection.                                                                 |
 | ODISS_DRUID_LOG_LEVEL                 | The Log4j log level that should be used for all Druid applications.                                                   |
 |                                       |                                                                                                                       |
-| ODISS_KAFKA_KAFKACLIENT_USERNAME      |                                                                                                                       |
-| ODISS_KAFKA_KAFKACLIENT_PASSWORD      |                                                                                                                       |
+| ODISS_KAFKA_KAFKACLIENT_USERNAME      | Username for the Confluent Platform client authentication.                                                            |
+| ODISS_KAFKA_KAFKACLIENT_PASSWORD      | Password for the Confluent Platform client authentication.                                                            |
 | ODISS_KAFKA_KAFKASERVER_USERNAME      | The Kafka Server admin username. Which is need by Druid to connect to a Kafka Topic. (username for external brokers)  |
 | ODISS_KAFKA_KAFKASERVER_PASSWORD      | The Kafka Server admin password. Which is need by Druid to connect to a Kafka Topic. (password for external brokers)  |
 | ODISS_KAFKA_CLIENT_USERNAME           | Username for SASL authentication with Zookeeper.                                                                      |
@@ -44,8 +44,8 @@ If you would like to use the other environment file, adjust the `-e` option when
 | ODISS_NGINX_CERT_FILE_NAME            | The file name of the Nginx certificate.                                                                               |
 | ODISS_NGINX_KEY_FILE_NAME             | The file name of the Nginx cey.                                                                                       |
 | <a name="metabase_config"></a>        |                                                                                                                       |
-| ODISS_METABASE_ADMIN_EMAIL            | The admin account E-Mail.                                                                                             |
-| ODISS_METABASE_ADMIN_FIRST_NAME       | The admin accounts first name.                                                                                        |
-| ODISS_METABASE_ADMIN_LAST_NAME        | The admin account last name.                                                                                          |
-| ODISS_METABASE_ADMIN_PASSWORD         | The admin account password.                                                                                           |
+| ODISS_METABASE_ADMIN_EMAIL            | The Metabase admin account E-Mail.                                                                                    |
+| ODISS_METABASE_ADMIN_FIRST_NAME       | The Metabase admin accounts first name.                                                                               |
+| ODISS_METABASE_ADMIN_LAST_NAME        | The Metabase admin account last name.                                                                                 |
+| ODISS_METABASE_ADMIN_PASSWORD         | The Metabase admin account password.                                                                                  |
 | ODISS_METABASE_LOG_LEVEL              | The Log4j log level that should be used for Metabase.                                                                 |
