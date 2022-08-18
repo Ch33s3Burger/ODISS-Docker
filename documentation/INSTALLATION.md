@@ -1,7 +1,5 @@
 # Installation
 
-<a name="installation_single_server"></a>
-
 ## Single Server
 
 The following installation guide describes the procedure to set up this project on a single machine. You can customize
@@ -17,31 +15,33 @@ git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
    the [configuration settings](./CONFIGURATION.md))
 
 3. Run the `setup.sh` script. It will also start the docker-compose.</br>
-   
-   * `-s SERVER_SIZE` OPTIONS: nano (default), micro, small, medium, large, xlarge </br>
-   * `-e ENVIRONMENT_FILE` Configuration File in folder `env/` default: `dev.properties`
 
-   a. Generate test certificates with the setup script.
+    * `-s SERVER_SIZE` OPTIONS: nano (default), micro, small, medium, large, xlarge </br>
+    * `-e ENVIRONMENT_FILE` Configuration File in folder `env/` default: `dev.properties`
+
+   **a. Generate test certificates with the setup script.**
 
    ```
    bash setup.sh
    ```
 
-   b. Add your own certificates.
+   **b. Add your own certificates.**
 
-      1. Run the `setup.sh` script.
-
-      ```
-      bash setup.sh -c
-      ```
-      
-      2. Add the certs manually. The location and configurations you have to adjust are described [here](./CERTS.md).
-
-      3. Rerun the `setup.sh` script. If you adjusted the [configuration settings](./CONFIGURATION.md) in between it will automatically update.
+    1. Run the `setup.sh` script.
 
       ```
       bash setup.sh -c
       ```
-   
-4. ODISS is now successfully set up. The Apache Druid, Apache Metabase and Trino links are printed out at the end of the `setup.sh` script.
+
+    2. Add the certs manually. The location and configurations you have to adjust are described [here](./CERTS.md).
+
+    3. Rerun the `setup.sh` script. If you adjusted the [configuration settings](./CONFIGURATION.md) in between it will
+       automatically update.
+
+      ```
+      bash setup.sh -c
+      ```
+
+4. ODISS is now successfully set up. The Apache Druid, Apache Metabase and Trino links are printed out at the end of
+   the `setup.sh` script.
    Now you can [get started](./GETTING_STARTED_ADMIN.md) with ODISS.
