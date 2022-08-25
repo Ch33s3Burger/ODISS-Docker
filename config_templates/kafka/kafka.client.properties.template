@@ -22,8 +22,8 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
 # SSL config #
 ##############
 
-ssl.truststore.location=path/to/kafka/truststore/location/${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}
-ssl.truststore.password=kafka_truststore_password
+ssl.truststore.location=./${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}
+ssl.truststore.password=${ODISS_KAFKA_TRUSTSTORE_PASSWORD}
 
 # If you are using a self signed certificate you have to add these config so that Kafka does not validate the certificate
 enable.ssl.certificate.verification=false
