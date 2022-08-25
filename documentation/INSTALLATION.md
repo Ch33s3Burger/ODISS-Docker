@@ -8,7 +8,7 @@ the Apache Druid applications to fit the system size.
 1. Clone the Repository
 
 ```
-git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
+git clone https://gitlab-imi.ukaachen.de/bdill/ODISS-Docker.git
 ```
 
 2. Edit the config under [env/dev.properties](../env/dev.properties) (For details on the variables take a look at
@@ -25,7 +25,7 @@ git clone https://github.com/Ch33s3Burger/ODISS-Docker.git
    bash setup.sh
    ```
 
-   **b. Add your own certificates.**
+   **b. Or Add your own certificates.**
 
     1. Run the `setup.sh` script.
 
