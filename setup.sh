@@ -22,6 +22,11 @@ done
 export $(grep -v '^#' ./env/${ENV} | xargs)
 export SERVER_SIZE
 
+if [ "$ODISS_POSTGRES_USER" == 'metabase' ] || [ "$ODISS_POSTGRES_USER" == 'druid' ]; then
+  echo "The ODISS_POSTGRES_USER varaible is not allowed to be named druid or metabase!"
+  exit 1
+fi
+
 mkdir -p "./config/druid/single-server"
 
 cp -R ./config_templates/kafka/. ./config/kafka
@@ -69,7 +74,7 @@ touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}
 
 if [ "$skip_cert_creation" == 'False' ]; then
-  echo "Would you like to generate the Kafka and Nginx production (test) certs? [y/N]"
+  echo "Would you like to generate the Kafka and Nginx development (test) certs? [y/N]"
   read generate_certs
 else
   generate_certs="n"
@@ -79,7 +84,7 @@ if [ "$generate_certs" == "y" ]; then
   bash scripts/kafka_cert_generator.sh -f
   bash scripts/nginx_cert_generator.sh -f
   echo
-  echo "The Kafka and Nginx production (test) certs have been created"
+  echo "The Kafka and Nginx development (test) certs have been created"
 else
   mkdir -p ./config/kafka/certs/
   mkdir -p ./config/nginx/certs/
