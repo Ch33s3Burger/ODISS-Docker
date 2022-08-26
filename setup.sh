@@ -1,19 +1,19 @@
 #!/bin/bash
 
-skip_cert_creation='False'
+create_test_certs='False'
 SERVER_SIZE='nano'
 ENV='dev.properties'
 
-while getopts 's:e:c' opt; do
+while getopts 's:e:t' opt; do
   case $opt in
-    c )
-      skip_cert_creation='True';;
+    t )
+      create_test_certs='True';;
     s )
       SERVER_SIZE=$OPTARG;;
     e )
       ENV=$OPTARG;;
     ? )
-      echo "script usage: $(basename \$0) [-s SERVER_SIZE] [-e ENVIRONMENT_FILE_NAME] [-c]" >&2
+      echo "script usage: $(basename \$0) [-s SERVER_SIZE] [-e ENVIRONMENT_FILE_NAME] [-t]" >&2
       exit 1
       ;;
   esac
@@ -75,11 +75,11 @@ envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME},
 touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}
 
-if [ "$skip_cert_creation" == 'False' ]; then
+if [ "$create_test_certs" == 'False' ]; then
   echo "Would you like to generate the Kafka and Nginx development (test) certs? [y/N]"
   read generate_certs
 else
-  generate_certs="n"
+  generate_certs="y"
 fi
 
 if [ "$generate_certs" == "y" ]; then
