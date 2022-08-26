@@ -63,12 +63,14 @@ envsubst < config_templates/druid/druid_supervisor_config/subject.json > config/
 envsubst < config_templates/druid/druid_supervisor_config/subjectentry.json > config/druid/druid_supervisor_config/subjectentry.json
 envsubst < config_templates/druid/druid_supervisor_config/user.json > config/druid/druid_supervisor_config/user.json
 
-envsubst '${ODISS_DRUID_ADMIN_PASSWORD} ${ODISS_SERVER_NAME}' < scripts/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
-envsubst < scripts/backup.sh.template > scripts/backup.sh
-envsubst < scripts/restore.sh.template > scripts/restore.sh
-envsubst '${ODISS_SERVER_NAME} ${ODISS_METABASE_ADMIN_EMAIL} ${ODISS_METABASE_ADMIN_FIRST_NAME} ${ODISS_METABASE_ADMIN_LAST_NAME} ${ODISS_METABASE_ADMIN_PASSWORD} ${ODISS_TRINO_USERNAME}"}' < scripts/auto_metabase_setup.sh.template > scripts/auto_metabase_setup.sh
-envsubst '${ODISS_NGINX_KEY_FILE_NAME} ${ODISS_NGINX_CERT_FILE_NAME} ${ODISS_SERVER_NAME}' < scripts/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
-envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}, ${ODISS_SERVER_NAME} ${ODISS_KAFKA_KEYSTORE_PASSWORD} ${ODISS_KAFKA_TRUSTSTORE_PASSWORD}' < scripts/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
+mkdir -p "./scripts/"
+
+envsubst '${ODISS_DRUID_ADMIN_PASSWORD} ${ODISS_SERVER_NAME}' < scripts_template/auto_kafka_ingestion.sh.template > scripts/auto_kafka_ingestion.sh
+envsubst < scripts_template/backup.sh.template > scripts/backup.sh
+envsubst < scripts_template/restore.sh.template > scripts/restore.sh
+envsubst '${ODISS_SERVER_NAME} ${ODISS_METABASE_ADMIN_EMAIL} ${ODISS_METABASE_ADMIN_FIRST_NAME} ${ODISS_METABASE_ADMIN_LAST_NAME} ${ODISS_METABASE_ADMIN_PASSWORD} ${ODISS_TRINO_USERNAME}"}' < scripts_template/auto_metabase_setup.sh.template > scripts/auto_metabase_setup.sh
+envsubst '${ODISS_NGINX_KEY_FILE_NAME} ${ODISS_NGINX_CERT_FILE_NAME} ${ODISS_SERVER_NAME}' < scripts_template/nginx_cert_generator.sh.template > scripts/nginx_cert_generator.sh
+envsubst '${ODISS_KAFKA_KEYSTORE_FILE_NAME} ${ODISS_KAFKA_TRUSTSTORE_FILE_NAME}, ${ODISS_SERVER_NAME} ${ODISS_KAFKA_KEYSTORE_PASSWORD} ${ODISS_KAFKA_TRUSTSTORE_PASSWORD}' < scripts_template/kafka_cert_generator.sh.template > scripts/kafka_cert_generator.sh
 
 touch ./config/trino/password.db
 htpasswd -b -B -C 10 ./config/trino/password.db ${ODISS_TRINO_USERNAME} ${ODISS_TRINO_PASSWORD}

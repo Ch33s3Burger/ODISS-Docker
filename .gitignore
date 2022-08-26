@@ -2,12 +2,7 @@
 /metabase/
 /docker-compose.yml
 /data/
-scripts/nginx_cert_generator.sh
-scripts/kafka_cert_generator.sh
-scripts/auto_kafka_ingestion.sh
-/scripts/auto_metabase_setup.sh
 *~
 /backup/
 /.idea/
-/scripts/backup.sh
-/scripts/restore.sh
+/scripts/

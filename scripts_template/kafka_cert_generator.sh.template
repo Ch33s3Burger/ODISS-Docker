@@ -113,7 +113,7 @@ echo "keystore. This script will create only one keystore."
 
 keytool -keystore $KEYSTORE_WORKING_DIRECTORY/$KEYSTORE_FILENAME \
   -alias localhost -validity $VALIDITY_IN_DAYS -genkey -keyalg RSA \
-  -storepass ${ODISS_KAFKA_KEYSTORE_PASSWORD} -noprompt < ./scripts/example_keystore_data.txt
+  -storepass ${ODISS_KAFKA_KEYSTORE_PASSWORD} -noprompt < ./scripts_template/example_keystore_data.txt
 
 echo
 echo "'$KEYSTORE_WORKING_DIRECTORY/$KEYSTORE_FILENAME' now contains a key pair and a"
