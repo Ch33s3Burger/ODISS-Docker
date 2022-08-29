@@ -2,8 +2,9 @@
 
 ## Single Server
 
-The following installation guide describes the procedure to set up this project on a single machine. You can customize
-the Apache Druid applications to fit the system size.
+The following installation guide describes the procedure to set up this project on a single machine.
+
+Run the following commands in a terminal.
 
 1. Clone the Repository
 
