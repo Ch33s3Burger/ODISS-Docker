@@ -3,14 +3,18 @@
 ## Table of contents
 
  * [Introduction](#introduction)
- * [Admin/Data Manager: Important functions](#admindata-manager-important-functions)
-   * [Managing Single-Server](#managing-single-server)
-   * [Apache Druid](#apache-druid)
-   * [Load Data into Kafka (Example: Java)](#load-data-into-kafka-example-java)
-     * [Maven dependency](#maven-dependency)
-     * [Kafka Client Properties](#kafka-client-properties)
-     * [Data Formats](#data-formats)
-     * [Java Example Script](#java-example-script)
+ * [Managing Single-Server](#managing-single-server)
+   * [Starting Single-Server](#starting-single-server)
+   * [Stopping Single-Server](#stopping-single-server)
+   * [Backup/Restoring Single-Server](#backuprestoring)
+ * [Apache Druid](#apache-druid)
+ * [Apache Metabase](#apache-metabase)
+   * [Create a common user account](#create-a-common-user-account)
+ * [Load Data into Kafka (Example: Java)](#load-data-into-odiss-example-java)
+   * [Maven dependency](#maven-dependency)
+   * [Kafka Client Properties](#kafka-client-properties)
+   * [Data Formats](#data-formats)
+   * [Java Example Script](#java-example-script)
  * [Load Data (from Kafka into Druid)](#load-data-from-kafka-into-druid)
  * [How to access the Data from external Clients](#how-to-access-the-data-from-external-clients)
     * [JDBC-Driver](#jdbc-driver)
@@ -18,7 +22,6 @@
     * [Publish Questions in Metabase](#publish-questions-in-metabase)
  * [How to access the Data using internal Tools](#how-to-access-the-data-using-internal-tools)
    * [Apache Druid Console](#apache-druid-console)
- * [Create a common user account](#create-a-common-user-account)
 
 ## Introduction
 
@@ -36,35 +39,33 @@ user management, but it also has only on admin account. All admin accounts are d
 [environment properties](../env/dev.properties). For more details regarding the configuration variables 
 take a look at the [configuration documentation](./CONFIGURATION.md).
 
-## Admin/Data Manager: Important functions
-
 Apache Druid router can be accessed over the `www.example.com` and Trino 
 can be accessed over `www.example.com/trino/`. Both links are printed out after running the
 [setup.sh script](./INSTALLATION.md).
 
-### Managing Single-Server
+## Managing Single-Server
 
 Since ODISS-Docker is Docker based you can just use the standard
 [docker](https://docs.docker.com/engine/reference/commandline/docker/) and
 [docker compose](https://docs.docker.com/compose/reference/) commands.
 
-#### Starting Single-Server
+### Starting Single-Server
 
 ```
 docker-compose start
 ```
 
-#### Stopping Single-Server
+### Stopping Single-Server
 
 ```
 docker-compose stop
 ```
 
-#### Backup/Restoring
+### Backup/Restoring
 
 Take a look at the [Backup/Restoring documentation](./BACKUP_RESTORING.md).
 
-### Apache Druid
+## Apache Druid
 
 The Apache Druid Web Console provides a general overview over the datasource's, 
 ingestion tasks and allows to graphically configure a new ingestion task from Apache Kafka.
@@ -76,21 +77,21 @@ the password is the `ODISS_DRUID_ADMIN_PASSWORD` variable configured in the [env
 For more information about how to use Apache Druid take a look at the 
 [Apache Druid documentation](https://druid.apache.org/docs/latest/design/).
 
-### Apache Metabase
+## Apache Metabase
 
 The Apache Metabase website is hosted under `www.example.com/metabase`. You have to replace 
 www.example.com with your `ODISS_SERVER_NAME` from the [environment properties](../env/dev.properties).
 
-#### Create a common user account
+### Create a common user account
 
 Since common users only use Metabase you only have to create a new Metabase account
 for them. The [official Metabase tutorial](https://www.metabase.com/docs/latest/administration-guide/04-managing-users.html)
 also shows you how to manage users and groups.
 
-For more information about how to use Apache Metabase take a look at the 
-[Apache Metabase documentation](https://www.metabase.com/docs/latest/).
+For more information about how to use Apache Metabase take a look at the [GETTING_STARTED Guide](./GETTING_STARTED_COMMON_USER.md)
+or the [Apache Metabase documentation](https://www.metabase.com/docs/latest/).
 
-### Load Data into ODISS (Example: Java)
+## Load Data into ODISS (Example: Java)
 
 Apache Kafka provides multiple client sided APIs like Java, C/C++ or Python. The following part will **only** show 
 how to ingest data with the Java Api into Kafka. For other client sided APIs take a look [here](https://cwiki.apache.org/confluence/display/KAFKA/Clients).
@@ -98,7 +99,7 @@ how to ingest data with the Java Api into Kafka. For other client sided APIs tak
 Kafka provides a [Java API](https://kafka.apache.org/documentation/#api) which can be added to every Java project with Maven.
 You just have to add the maven dependencies.
 
-#### Maven dependency
+### Maven dependency
 
 ```
 <dependency>
@@ -116,7 +117,7 @@ have to authenticate via **SSL_SASL**. The connection is also encrypted over TLS
 take a look at the [architecture section](./ARCHITECTURE.md).
 Therefore, the Kafka Client JAAS config and the Kafka Truststore is needed to establish the connection.
 
-#### Kafka Client Properties
+### Kafka Client Properties
 
 The Kafka Client properties can look like the following: `kafka.client.properties`. You only have to replace
 the variables from the [environment properties](../env/dev.properties).
@@ -166,7 +167,7 @@ value.serializer=org.apache.kafka.common.serialization.StringSerializer
 key.serializer=org.apache.kafka.common.serialization.IntegerSerializer
 ```
 
-#### Data Formats
+### Data Formats
 
 Java method to integrate/import a JSONArray in a Kafka Topic. The JSONObjects in the JSONArray are not allowed to holder
 deeper JSON structure like another JSONArray. It is only allowed to look like the following example:
@@ -186,7 +187,7 @@ using JSONArrays you have to add the `org.json` dependency.
 ```
 
 
-#### Java Example Script
+### Java Example Script
 
 The following method creates a KafkaProducer with the `properties` loaded from
 the [Kafka Client properties](#kafka-client-properties). Then it sends a ProducerRecord for each entry in the JSONArray.
@@ -213,7 +214,7 @@ public void integrateIntoStream(String streamTopicName, JSONArray data) {
 ```
 
 
-### Load Data (from Kafka into Druid)
+## Load Data (from Kafka into Druid)
 
 The following section explains how you can import the just filled Kafka Stream into Druid by using the Druid Console.
 
@@ -253,7 +254,7 @@ have adjusted your Kafka Jaas config the `Consumer properties` may differ.
    . Therefore, just follow the Druid tutorial from the third step (Parse data).
 
 
-### How to access the Data from external Clients
+## How to access the Data from external Clients
 
 There are APIs in Druid or Metabase to load the data into external programs.
 (Suggestion: Use the Druid APIs since they directly access the data, and you do not have to publish your data publicly.)
@@ -267,13 +268,13 @@ connect to the interface. The only thing that differ is the URL. First, you can 
 to add your basic auth credentials. It should look something like the following. Only replace the variables with
 definition from the [environment properties](../env/dev.properties).
 
-#### JDBC-Driver
+### JDBC-Driver
 
 ```
 jdbc:avatica:remote:url=https://admin:${ODISS_DRUID_ADMIN_PASSWORD}@${ODISS_SERVER_NAME}/druid/v2/sql/avatica/
 ```
 
-#### HTTP POST Requests (in R)
+### HTTP POST Requests (in R)
 
 You can also query the data over [HTTP POST requests](https://druid.apache.org/docs/latest/querying/sql.html#http-post)
 if you are not able to use the JDBC driver. In R you can get and parse the data with the following script. You need to
@@ -295,7 +296,7 @@ data <- POST(
   fromJSON()
 ```
 
-#### Publish Questions in Metabase
+### Publish Questions in Metabase
 
 In Metabase you can define [Questions](https://www.metabase.com/docs/latest/users-guide/04-asking-questions.html) (SQL
 Queries) and save them. To access the results you have
@@ -303,7 +304,7 @@ to [publish the question](https://www.metabase.com/docs/latest/administration-gu
 a URL with a generated ID for that question. Over the URL you can get the data with a HTTP get request.
 **But this URL is not secured over authentication, so it is publicly accessible if you have the question ID.**
 
-### How to access the Data using internal Tools
+## How to access the Data using internal Tools
 
 You can query the data using Metabase or
 the [Druid Console](https://druid.apache.org/docs/latest/operations/druid-console.html).
@@ -311,12 +312,9 @@ the [Druid Console](https://druid.apache.org/docs/latest/operations/druid-consol
 into dashboards.)
 
 <a name="getting_started_access_data_external_druid_console"></a>
-#### Apache Druid Console
+### Apache Druid Console
 
 The Druid Console looks like the following and is an easy tool for simple SQL queries.
 
 ![Druid Console SQL Query](images/Druid_console_query_data.png)
 
-#### Apache Metabase
-
-Metabase is already described for the common user. Take a look at [here](./GETTING_STARTED_COMMON_USER.md).
