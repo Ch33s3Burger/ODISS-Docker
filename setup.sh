@@ -36,6 +36,7 @@ cp -R ./config_templates/trino/. ./config/trino
 cp -R ./config_templates/zookeeper/. ./config/zookeeper
 cp -R ./config_templates/postgres/. ./config/postgres
 
+rm config/kafka/kafka.client.properties.template
 
 cp -R ./config_templates/druid/druid_supervisor_config/. ./config/druid/druid_supervisor_config
 cp -R ./config_templates/druid/single-server/${SERVER_SIZE}/. ./config/druid/single-server/${SERVER_SIZE}
